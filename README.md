@@ -33,6 +33,7 @@ yarn run test
 👤 **Alwin Lohrie**
 
 * Github: [@niwla23](https://github.com/niwla23)
+* Gitlab: [@niwla23](https://gitlab.com/niwla23)
 
 ## 🤝 Contributing
 
