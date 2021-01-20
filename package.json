@@ -2,6 +2,14 @@
   "name": "SchulHack",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://gitlab.com/Niwla23/schulhack",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/niwla23/schulhack.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/niwla23/schulhack/-/issues"
+  },
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
