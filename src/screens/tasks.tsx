@@ -44,11 +44,15 @@ export default function TasksScreen({ navigation }) {
     setLoaded(false)
     const iserv = new IservWrapper
     iserv.init().then(() => {
-      iserv.getTasksOverview().then(fetchedTasks => setTasks(fetchedTasks))
+      iserv.getTasksOverview().then(fetchedTasks => {
+        setTasks(fetchedTasks)
+        setLoaded(true)
+      })
         .catch(e => {
           setError(e.toString())
         })
-      setLoaded(true)
+
+
     }).catch(e => {
       setError(e.toString())
     })
@@ -78,7 +82,7 @@ export default function TasksScreen({ navigation }) {
           if (error) {
             return ListError({ props: { error: error, icon: "bug" } })
           } else if (!loaded) {
-            return <></>
+            return ListError({ props: { error: "Wird geladen", icon: "clock" } })
           } else {
             return ListError({ props: { error: "Du hast in letzter Zeit keine Aufgaben bekommen", icon: "glass-cheers" } })
           }
