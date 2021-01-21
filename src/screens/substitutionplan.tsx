@@ -33,27 +33,22 @@ export default function SubstitutionScreen({ navigation }) {
 
     const load_plan = (isNextDay: Boolean) => {
         setData([])
-        try {
-            setLoaded(false)
-            setError(null)
-            const iserv = new IservWrapper
-            iserv.init().then(() => {
-                iserv.getSubstitutionPlan(isNextDay).then(plan => {
-                    setData(plan)
-                    setLoaded(true)
-                }).catch(e => {
-                    setError(e.toString())
-                    setLoaded(true)
-                })
+        setLoaded(false)
+        setError(null)
+        const iserv = new IservWrapper
+        iserv.init().then(() => {
+            iserv.getSubstitutionPlan(isNextDay).then(plan => {
+                setData(plan)
+                setLoaded(true)
+            }).catch(e => {
+                setError(e.toString())
+                setLoaded(true)
             })
-                .catch(e => {
-                    setError(e.toString())
-                    setLoaded(true)
-                })
-        } catch {
-            // fuck it
-        }
-
+        })
+            .catch(e => {
+                setError(e.toString())
+                setLoaded(true)
+            })
 
     }
 
