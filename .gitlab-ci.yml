@@ -23,9 +23,19 @@ variables:
 
 # Packages installation before running script
 before_script:
+  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+
+  - curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
+  - echo 'deb https://deb.nodesource.com/node_14.x xenial main' > /etc/apt/sources.list.d/nodesource.list && \
+
+  - apt-get -qq update && \
+  - apt-get install -qqy --no-install-recommends \
+      nodejs \
+      yarn wget tar unzip lib32stdc++6 lib32z1
+
+  - yarn
   - cd android
-  - apt-get --quiet update --yes
-  - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
 
   # Setup path as android_home for moving/exporting the downloaded sdk into it
   - export ANDROID_HOME="${PWD}/android-home"
