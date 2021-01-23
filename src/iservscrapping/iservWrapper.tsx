@@ -54,7 +54,7 @@ export class IservWrapper {
                 })
             }
             console.log(JSON.stringify(result))
-            return {plan: result, date: raw.date, week: raw.week}
+            return { plan: result, date: raw.date, week: raw.week }
         } else {
             throw new Error("Not initialized. Please call .init() first.")
         }
@@ -134,5 +134,32 @@ export class IservWrapper {
             }
         });
         return cleanedResult
+    }
+    async getBirthdays() {
+        await this.iserv?.login()
+        const raw = await this.iserv?.getBirthdays()
+        var formatted = []
+        raw?.forEach(element => {
+            const date = element.date
+            var highlight = false
+            var formattedDate = ""
+            if (element.date.becomes && element.date.when !== "heute") {
+                formattedDate = `wird in ${date.when} ${date.becomes}`
+            } else if (element.date.becomes && element.date.when === "heute") {
+                formattedDate = `wird heute ${date.becomes}`
+                highlight = true
+            } else if (element.date.when === "heute") {
+                formattedDate = `hat heute Geburtstag`
+                highlight = true
+            } else {
+                formattedDate = `hat in ${date.when} Geburtstag`
+            }
+            formatted.push({
+                name: element.name,
+                date: formattedDate,
+                highlight: highlight
+            })
+        });
+        return formatted
     }
 }

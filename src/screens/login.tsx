@@ -29,7 +29,7 @@ function makeUrl(url) {
 export default function LoginScreen({ navigation, route }) {
     const { colors, isDark } = useTheme();
 
-
+    const [email, setEmail] = useState("")
     const [server, setServer] = useState(null)
     const [user, setUser] = useState(null)
     const [password, setPassword] = useState(null)
@@ -98,8 +98,9 @@ export default function LoginScreen({ navigation, route }) {
                     keyboardType={"email-address"}
                     style={styles.input}
                     placeholder="user.name@demoiserv.de"
-                    // value={user}
+                    value={email}
                     onChangeText={(value) => {
+                        setEmail(value)
                         setServer(value.split("@")[1])
                         setUser(value.split("@")[0])
                     }}
@@ -132,6 +133,7 @@ export default function LoginScreen({ navigation, route }) {
                             ToastAndroid.show("Anmeldung fehlgeschlagen", ToastAndroid.LONG)
                         }
 
+                        setEmail("")
                         setPassword(null)
                         setUser(null)
 

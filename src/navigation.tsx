@@ -7,6 +7,8 @@ import {
     Text,
     StatusBar,
     ImageBackground,
+    Dimensions,
+    useWindowDimensions,
 } from 'react-native';
 import {
     createDrawerNavigator,
@@ -27,6 +29,7 @@ import BirthdaysScreen from "./screens/birthdays"
 import SettingsScreen from "./screens/settings"
 import LoginScreen from './screens/login';
 import MenuScreen from './screens/menu'
+import InfoScreen from './screens/info'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Keychain from 'react-native-keychain';
 
@@ -135,13 +138,13 @@ export const Navigation: React.FC<Props> = (props) => {
                     labelStyle={styles.drawerItemLabel}
                     icon={ClassTestsIcon}
                     onPress={() => props.navigation.navigate("ClassTests")}
-                />
+                /> */}
                 <DrawerItem
                     label="Geburtstage"
                     labelStyle={styles.drawerItemLabel}
                     icon={BirthdayIcon}
                     onPress={() => props.navigation.navigate("Birthdays")}
-                /> */}
+                />
                 <DrawerItem
                     label="Einstellungen"
                     labelStyle={styles.drawerItemLabel}
@@ -182,12 +185,14 @@ export const Navigation: React.FC<Props> = (props) => {
         )
     }
 
+    const dimensions = useWindowDimensions()
+
     return (
         <NavigationContainer>
             <Drawer.Navigator
                 initialRouteName="SubstitutionPlan"
                 drawerStyle={styles.drawer}
-
+                drawerType={dimensions.width >= 768 ? 'permanent' : 'slide'}
                 drawerContent={CustomDrawerContent}
             >
                 <Drawer.Screen
@@ -214,6 +219,11 @@ export const Navigation: React.FC<Props> = (props) => {
                     name="Settings"
                     options={{ title: "Einstellungen", drawerIcon: SettingsIcon }}
                     component={SettingsScreen}
+                />
+                <Drawer.Screen
+                    name="Info"
+                    options={{ title: "Über diese App", drawerIcon: SettingsIcon }}
+                    component={InfoScreen}
                 />
                 <Drawer.Screen
                     name="Login"

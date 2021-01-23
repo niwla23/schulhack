@@ -19,7 +19,7 @@ export const Header = (props) => {
             position: "absolute",
             zIndex: 99,
         },
-        menu: { color: colors.primary, fontSize: 24},
+        menu: { color: colors.primary, fontSize: 24 },
         title: {
             color: colors.text,
             fontSize: 30,
@@ -30,15 +30,29 @@ export const Header = (props) => {
         }
     });
 
+    var icon
+
+    switch (props.action) {
+        case "drawer":
+            icon = "bars"
+            break
+        case "back":
+            icon = "arrow-left"
+            break
+        default:
+            icon = "bars"
+    }
+
     return (
         <View>
             <Pressable
                 style={styles.menuContainer}
+                hitSlop={50}
                 onPress={() => {
                     props.openDrawer()
                 }}
             >
-                <FontAwesome5 style={styles.menu} name='bars' light />
+                <FontAwesome5 style={styles.menu} name={icon} light />
             </Pressable>
 
             <Text style={styles.title}>{props.title}</Text>

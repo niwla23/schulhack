@@ -27,7 +27,7 @@ export default function SettingsScreen({ navigation }) {
 
     return (
         <View style={styles.background}>
-            <Header title="Einstellungen" openDrawer={() => {
+            <Header action="drawer" title="Einstellungen" openDrawer={() => {
                 navigation.openDrawer()
             }}/>
             <ScrollView

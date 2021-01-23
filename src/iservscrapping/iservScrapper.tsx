@@ -6,8 +6,6 @@ const cheerio = require('react-native-cheerio');
 import { untisPlanParser } from './parseUntisPlan'
 import { parseTasksOverview } from './parseTasks'
 import login from './login'
-import { parse } from 'path';
-import { Alert } from 'react-native';
 
 export type ParserResult = {
   plan: Object,
@@ -76,5 +74,36 @@ export class IservScrapper {
   async getTasksOverview() {
     let response = await this._authenticated_request("/iserv/exercise"); // ?filter[status]=all
     return parseTasksOverview(response.data)
+  }
+
+  async getBirthdays() {
+    let response = await this._authenticated_request("/iserv/");
+    const $ = cheerio.load(response.data)
+
+    var parsed: Array<Object> = []
+    const birthdaysContainer = $($('h2:contains("Geburtstage")').parent().parent())
+    const birthdayList = $($($(birthdaysContainer.children()[1]).children()[0]).children()[0])
+
+    birthdayList.children().each(function (_index: Number, row) {
+      row = $(row)
+      var birthday = {}
+      const splitted = row.text().split("\n")
+      
+      birthday.name = splitted[1].trim()
+
+      const date = splitted[3].trim()
+      const dateSplitted = date.split(",")
+
+      birthday.date = {}
+      birthday.date.when = dateSplitted[0].trim()
+      if (dateSplitted[1]) {
+        birthday.date.becomes = parseInt(dateSplitted[1].trim())
+      }
+
+
+      parsed.push(birthday)
+    })
+
+    return parsed
   }
 }

@@ -49,11 +49,12 @@ export default function TasksScreen({ navigation }) {
         setLoaded(true)
       })
         .catch(e => {
+          setLoaded(true)
           setError(e.toString())
         })
 
-
     }).catch(e => {
+      setLoaded(true)
       setError(e.toString())
     })
   }
@@ -65,7 +66,7 @@ export default function TasksScreen({ navigation }) {
 
   return (
     <View style={styles.background}>
-      <Header title="Aufgaben" openDrawer={navigation.openDrawer} />
+      <Header action="drawer" title="Aufgaben" openDrawer={navigation.openDrawer} />
       <SectionList
         contentInset={{ top: 30 }}
         onRefresh={() => { loadTasks() }}

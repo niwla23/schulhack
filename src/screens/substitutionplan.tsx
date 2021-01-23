@@ -118,7 +118,7 @@ export default function SubstitutionScreen({ navigation }) {
 
         <View style={styles.background}>
             <View style={styles.header}>
-                <Header title="Vertretungsplan" openDrawer={() => {
+                <Header action="drawer" title="Vertretungsplan" openDrawer={() => {
                     navigation.openDrawer()
                 }}></Header>
 
