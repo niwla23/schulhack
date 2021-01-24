@@ -24,10 +24,8 @@ variables:
 # Packages installation before running script
 before_script:
   - apt-get -qq update && \
-  - apt-get install -qqy --no-install-recommends \
-      npm wget tar unzip lib32stdc++6 lib32z1
-  - npm install -g yarn
-  - yarn
+  - apt-get install -qqy yarnpkg wget tar unzip lib32stdc++6 lib32z1
+  - yarnpkg
   - cd android
 
   # Setup path as android_home for moving/exporting the downloaded sdk into it
