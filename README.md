@@ -1,5 +1,5 @@
 <div align="center">
-<h1 align="center">SchulHack </h1>
+# SchulHack 
 A react native app to show the substitutionplan and tasks from iserv
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.1.0-blue.svg?cacheSeconds=2592000" />
