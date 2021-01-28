@@ -1,12 +1,12 @@
 <div align="center">
 <h1 align="center">SchulHack </h1>
+A react native app to show the substitutionplan and tasks from iserv
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.1.0-blue.svg?cacheSeconds=2592000" />
   <img alt="Pipeline" src="https://gitlab.com/niwla2305/schulhack/badges/master/pipeline.svg">
   <img alt="License GPL" src="https://img.shields.io/badge/License-GPL-yellow.svg">
 </p>
 </div>
-> A react native app to show the substitutionplan and tasks from iserv
 
 ### 🏠 [Homepage](https://gitlab.com/Niwla23/schulhack)
 
