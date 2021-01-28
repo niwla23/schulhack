@@ -13,21 +13,21 @@ A react native app to show the substitutionplan and tasks from iserv
 
 ## Install
 
-```sh
-yarn install
-```
-
-## Usage
-
-```sh
-yarn run start
-```
-
-## Run tests
+You can find this app on fdroid and the play store. You can also build it yourself. To do so, follow these steps:
+ * Get [react native setup] (https://reactnative.org) as well as the Android SDK.
+ * Clone this repo to your machine using git
+ * RUn these commands:
 
 ```sh
-yarn run test
+yarn
+cd android
+cp gradle.properties.example gradle.properties
 ```
+ * Generate a keychain (google it)
+ * edit gradle.properties with your values
+ * `./gradlew assembleRelease`
+ * Your apks should be in app/build/outputs/apks
+
 
 ## Author
 
@@ -38,11 +38,8 @@ yarn run test
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://gitlab.com/niwla23/schulhack/-/issues). You can also take a look at the [contributing guide](https://gitlab.com/niwla23/schulhack/blob/master/CONTRIBUTING.md).
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://gitlab.com/niwla23/schulhack/-/issues). By Contributing you agree that your contribution will be released under GPLv3.
 
 ## Show your support
 
 Give a ⭐️ if this project helped you!
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
