@@ -14,7 +14,7 @@ A react native app to show the substitutionplan and tasks from iserv
 ## Install
 
 You can find this app on fdroid and the play store. You can also build it yourself. To do so, follow these steps:
- * Get [react native setup](https://reactnative.org) as well as the Android SDK.
+ * Get [react native setup](https://reactnative.dev/docs/environment-setup) as well as the Android SDK.
  * Clone this repo to your machine using git
  * RUn these commands:
 
