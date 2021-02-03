@@ -39,6 +39,8 @@ cp gradle.properties.example gradle.properties
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://gitlab.com/niwla23/schulhack/-/issues). By Contributing you agree that your contribution will be released under GPLv3.
+All merge requests should be made against the develop branch, not master!
+
 
 ## Show your support
 
