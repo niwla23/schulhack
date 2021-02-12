@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useColorScheme } from 'react-native';
-import { lightColors, darkColors } from './colors';
+import { lightColors, darkColors, darkPinkColors, darkGreenColors } from './colors';
 
 export const ThemeContext = React.createContext({
     isDark: false,
@@ -11,19 +11,36 @@ export const ThemeContext = React.createContext({
 });
 
 export const ThemeProvider = (props) => {
-    var colorScheme = useColorScheme();
-    if (props.theme && props.theme !== "system") {
-        colorScheme = props.theme
-    } 
-    const [isDark, setIsDark] = React.useState(colorScheme === "dark");
-
+    var colorScheme = props.theme || "dark";
+    const [isDark, setIsDark] = React.useState(true);
     React.useEffect(() => {
-        setIsDark(colorScheme === "dark");
-    }, [colorScheme]);
+        setIsDark(colorScheme.includes("dark"))
+    }, [setIsDark])
+
+
+
+    let colors
+    switch (colorScheme) {
+        case "dark":
+            colors = darkColors
+            break
+        case "light":
+            colors = lightColors
+            // setIsDark(false)
+            break
+        case "darkPink":
+            colors = darkPinkColors
+            break
+        case "darkGreen":
+            colors = darkGreenColors
+            break
+        default:
+            colors = darkColors
+    }
 
     const defaultTheme = {
         isDark,
-        colors: isDark ? darkColors : lightColors,
+        colors: colors,
         setScheme: (scheme) => setIsDark(scheme === "dark"),
     };
 

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, Text, View, StyleSheet, ViewStyle, SectionList, TextStyle, Alert } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import TaskItem from '../components/taskitem';
-import { Header } from '../components/header'
 import { IservWrapper } from '../iservscrapping';
 import ListError from '../components/listError';
 
@@ -18,6 +17,8 @@ export default function TasksScreen({ navigation }) {
   interface Style {
     background: ViewStyle;
     sectionHeader: TextStyle;
+    sectionHeaderContainer: ViewStyle;
+    sectionHeaderBadge: TextStyle;
     contentScroll: ViewStyle;
   }
   const styles = StyleSheet.create<Style>({
@@ -27,12 +28,30 @@ export default function TasksScreen({ navigation }) {
       // alignItems: 'center',
       // justifyContent: 'center'
     },
+    sectionHeaderContainer: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      
+      marginTop: 16,
+      marginLeft: 16,
+      marginRight: 16
+    },
     sectionHeader: {
       color: colors.text,
       fontSize: 23,
-      padding: 0,
-      marginTop: 16,
-      marginLeft: 16
+
+    },
+    sectionHeaderBadge: {
+      color: colors.text,
+      backgroundColor: colors.primary,
+      padding: 4,
+      width: 30,
+      height: 30,
+      borderRadius: 30/2,
+      fontSize: 16,
+      
+      textAlign: "center"
     },
     contentScroll: {
       padding: 8,
@@ -42,6 +61,8 @@ export default function TasksScreen({ navigation }) {
 
   function loadTasks() {
     setLoaded(false)
+    setTasks([])
+    setError(null)
     const iserv = new IservWrapper
     iserv.init().then(() => {
       iserv.getTasksOverview().then(fetchedTasks => {
@@ -66,26 +87,29 @@ export default function TasksScreen({ navigation }) {
 
   return (
     <View style={styles.background}>
-      <Header action="drawer" title="Aufgaben" openDrawer={navigation.openDrawer} />
       <SectionList
         contentInset={{ top: 30 }}
         onRefresh={() => { loadTasks() }}
         refreshing={!loaded}
         sections={tasks}
         style={styles.contentScroll}
+        ListFooterComponent={()=>{return(<View style={{height: 20}} />)}}
         keyExtractor={(item, index) => item + index}
-        // renderItem={({ item }) => <Text style={{ color: "#fff" }}>{item.toString()}</Text>}
         renderItem={({ item }) => <TaskItem content={item} />}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.sectionHeader}>{title}</Text>
+        renderSectionHeader={({ section: { title, data } }) => (
+          <View style={styles.sectionHeaderContainer}>
+            <Text style={styles.sectionHeader}>{title}</Text>
+            <Text style={styles.sectionHeaderBadge}>{data.length}</Text>
+          </View>
+
         )}
         ListEmptyComponent={() => {
           if (error) {
-            return ListError({ props: { error: error, icon: "bug" } })
+            return ListError({ error: error, icon: "bug" })
           } else if (!loaded) {
-            return ListError({ props: { error: "Wird geladen", icon: "clock" } })
+            return ListError({ error: "Wird geladen", icon: "clock" })
           } else {
-            return ListError({ props: { error: "Du hast in letzter Zeit keine Aufgaben bekommen", icon: "glass-cheers" } })
+            return ListError({ error: "Du hast in letzter Zeit keine Aufgaben bekommen", icon: "glass-cheers" })
           }
 
         }}

@@ -1,11 +1,12 @@
 "use strict"
 
 import React, { useEffect, useState } from 'react';
-import { Button, Text, View, StyleSheet, ViewStyle, TextStyle, Alert, ToastAndroid } from 'react-native';
+import { Button, Text, View, StyleSheet, ViewStyle, TextStyle, ToastAndroid } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { color } from 'react-native-reanimated';
+import { acc, color } from 'react-native-reanimated';
 import { useTheme } from '../theme/themeprovider';
 import * as Keychain from 'react-native-keychain';
+import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -33,6 +34,8 @@ export default function LoginScreen({ navigation, route }) {
     const [server, setServer] = useState(null)
     const [user, setUser] = useState(null)
     const [password, setPassword] = useState(null)
+    const [accepted, setAccepted] = useState(false)
+
     useEffect(() => {
         AsyncStorage.getItem("@server").then(r => {
             if (r) {
@@ -49,6 +52,8 @@ export default function LoginScreen({ navigation, route }) {
         input: ViewStyle;
         header: TextStyle;
         description: TextStyle;
+        checkboxContainer: ViewStyle;
+        checkbox: ViewStyle;
     }
     const styles = StyleSheet.create<Style>({
         background: {
@@ -74,12 +79,20 @@ export default function LoginScreen({ navigation, route }) {
         },
         description: {
             color: colors.text,
-            paddingBottom: 20
+            paddingBottom: 20,
+
         },
         input: {
             color: colors.text,
             width: "100%",
             marginBottom: 5
+        },
+        checkboxContainer: {
+            flexDirection: "row",
+            marginBottom: 20,
+        },
+        checkbox: {
+            alignSelf: "baseline",
         }
     })
 
@@ -97,7 +110,7 @@ export default function LoginScreen({ navigation, route }) {
                     autoCorrect={false}
                     keyboardType={"email-address"}
                     style={styles.input}
-                    placeholder="user.name@demoiserv.de"
+                    placeholder="Iserv E-mail Adresse"
                     value={email}
                     onChangeText={(value) => {
                         setEmail(value)
@@ -109,7 +122,7 @@ export default function LoginScreen({ navigation, route }) {
                     placeholderTextColor={colors.text2}
                     underlineColorAndroid={colors.text}
                     style={styles.input}
-                    placeholder="dEin33SEHRsicheresPasswort!!"
+                    placeholder="Iserv Passwort"
                     autoCompleteType="password"
                     autoCorrect={false}
                     autoCapitalize={"none"}
@@ -119,14 +132,36 @@ export default function LoginScreen({ navigation, route }) {
                         setPassword(value)
                     }}
                 />
+                {/* <View style={styles.checkboxCotainer}>
+                    <CheckBox
+                    style={styles.checkbox}
+                        tintColor="#fff"
+                        tintColors={{ true: colors.primary, false: "#fff" }}
+                        value={accepted}
+                        onValueChange={(newValue) => setAccepted(newValue)}
+                    />
+                    <Text style={styles.description}>Ich habe die Datenschutzerklärung und den Haftungsauschluss gelesen.</Text>
+                </View> */}
+                <View style={styles.checkboxContainer}>
+                    <CheckBox
+                        value={accepted}
+                        onValueChange={setAccepted}
+                        tintColors={{ true: colors.primary, false: colors.text }}
+                        style={styles.checkbox}
+                    />
+                    <Text onPress={() => { navigation.navigate("Info") }} style={styles.description}>Ich habe die Datenschutzerklärung und den Haftungsauschluss gelesen.</Text>
+                </View>
+
                 <Button
                     color={colors.primary}
-                    disabled={!(makeUrl(server) && user && password)}
+                    disabled={!(makeUrl(server) && user && password && accepted)}
                     title="Login"
                     onPress={async () => {
                         try {
                             await AsyncStorage.setItem("@server", makeUrl(server))
                             await AsyncStorage.setItem("@intro_shown", "true")
+                            await AsyncStorage.removeItem("@cookie")
+                            await AsyncStorage.removeItem("@cookie_expires")
                             await Keychain.setGenericPassword(user, password)
 
                         } catch {
@@ -137,11 +172,13 @@ export default function LoginScreen({ navigation, route }) {
                         setPassword(null)
                         setUser(null)
 
-                        try {
-                            navigation.navigate(route.params.target)
-                        } catch {
-                            navigation.navigate("Menu")
-                        }
+                        // try {
+                        //     navigation.navigate(route.params.target)
+                        // } catch {
+                        //     navigation.navigate("App")
+                        // }
+
+                        route.params.setIsLoggedIn(true)
 
 
 

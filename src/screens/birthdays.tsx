@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Text, View, StyleSheet, ViewStyle, FlatList, TextStyle, Alert } from 'react-native';
-import type { Type } from "react-native"
+import { View, StyleSheet, ViewStyle, FlatList, TextStyle } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
-import { Header } from '../components/header';
-import ListError from '../components/listError';
 import { BirthdayItem } from '../components/birthdayitem'
 import { IservWrapper } from '../iservscrapping';
+import ListError from '../components/listError';
 
 export default function BirthdaysScreen({ navigation }) {
     const { colors, isDark } = useTheme();
     const [birthdays, setBirthdays] = useState([])
 
     const [loaded, setLoaded] = useState(false)
+    const [error, setError] = useState("")
 
     function loadBirthdays() {
         setLoaded(false)
@@ -23,12 +22,12 @@ export default function BirthdaysScreen({ navigation }) {
             })
                 .catch(e => {
                     setLoaded(true)
-                    // setError(e.toString())
+                    setError(e.toString())
                 })
 
         }).catch(e => {
             setLoaded(true)
-            // setError(e.toString())
+            setError(e.toString())
         })
     }
 
@@ -39,7 +38,6 @@ export default function BirthdaysScreen({ navigation }) {
     interface Style {
         background: ViewStyle;
         defaultText: TextStyle;
-        header: ViewStyle;
         courseHeader: TextStyle;
         noItemsFoundText: TextStyle;
         errorText: TextStyle;
@@ -49,9 +47,6 @@ export default function BirthdaysScreen({ navigation }) {
         background: {
             backgroundColor: colors.background,
             height: "100%"
-        },
-        header: {
-
         },
         defaultText: {
             color: colors.text
@@ -89,18 +84,23 @@ export default function BirthdaysScreen({ navigation }) {
     return (
 
         <View style={styles.background}>
-            <View style={styles.header}>
-                <Header action="drawer" title="Geburtstage" openDrawer={() => {
-                    navigation.openDrawer()
-                }}>
-                </Header>
-            </View>
             <FlatList
                 data={birthdays}
                 refreshing={!loaded}
                 onRefresh={loadBirthdays}
                 renderItem={renderItem}
                 keyExtractor={item => item.name}
+                ListFooterComponent={()=>{return(<View style={{height: 20}} />)}}
+                ListEmptyComponent={() => {
+                    if (error) {
+                      return ListError({ error: error, icon: "bug" })
+                    } else if (!loaded) {
+                      return ListError({ error: "Wird geladen", icon: "clock" })
+                    } else {
+                      return ListError({ error: "Niemand hat in nächster Zeit Geburtstag", icon: "heart-broken" })
+                    }
+          
+                  }}
             />
         </View>
     );

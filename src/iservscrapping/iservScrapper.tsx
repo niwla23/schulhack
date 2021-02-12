@@ -1,11 +1,13 @@
 "use strict"
 
-import axios, { AxiosAdapter } from 'axios';
+import axios, { ResponseType, Method } from 'axios';
+const FormData = require('form-data');
 const cheerio = require('react-native-cheerio');
 
 import { untisPlanParser } from './parseUntisPlan'
-import { parseTasksOverview } from './parseTasks'
+import { parseTaskDetails, parseTasksOverview } from './parseTasks'
 import login from './login'
+import { Task } from './types';
 
 export type ParserResult = {
   plan: Object,
@@ -29,23 +31,25 @@ export class IservScrapper {
   async login() {
     try {
       this.cookies = await login(this.url, this.user, this.password)
-      return true
+      return this.cookies
     } catch (e) {
       throw e
     }
 
   }
 
-  async _authenticated_request(path: String, responseType?) {
+  async _authenticated_request(path: String, responseType?: ResponseType, method?: Method, body?: Object) {
     return new Promise((resolve, reject) => {
       axios({
-        method: 'get',
+        method: method || "get",
         url: `${this.url}${path}`,
         responseType: responseType,
         headers: {
           Cookie: this.cookies,
           'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0',
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
+        data: body
       })
         .then(function (response) {
           resolve(response);
@@ -76,8 +80,36 @@ export class IservScrapper {
     return parseTasksOverview(response.data)
   }
 
+  async getTaskDetails(id: Number): Promise<Task> {
+    let response = await this._authenticated_request(`/iserv/exercise/show/${id}`);
+    return parseTaskDetails(response.data, this.url)
+  }
+
+  async setTaskDoneState(id: Number, state: Boolean): Promise<Boolean> {
+    // This function updates the "done" state on a select task.
+    let response = await this._authenticated_request(`/iserv/exercise/show/${id}`);
+    const $ = cheerio.load(response.data)
+
+    // const confirmed = $("#confirmation_confirmed option:selected").attr("value")
+    const confirmation_id = $("#confirmation_id").attr("value")
+    const confirmation_token = $("#confirmation__token").attr("value")
+
+    const formData = new URLSearchParams();
+    formData.append("confirmation[confirmed]", Number(state).toString())
+    formData.append("confirmation[submit]", "")
+    formData.append("confirmation[id]", confirmation_id)
+    formData.append("confirmation[_token]", confirmation_token)
+
+    this._authenticated_request(`/iserv/exercise/confirm/${id}`, undefined, "POST", formData)
+
+    return false
+  }
+
   async getBirthdays() {
+
+
     let response = await this._authenticated_request("/iserv/");
+
     const $ = cheerio.load(response.data)
 
     var parsed: Array<Object> = []
@@ -85,10 +117,11 @@ export class IservScrapper {
     const birthdayList = $($($(birthdaysContainer.children()[1]).children()[0]).children()[0])
 
     birthdayList.children().each(function (_index: Number, row) {
+
       row = $(row)
       var birthday = {}
       const splitted = row.text().split("\n")
-      
+
       birthday.name = splitted[1].trim()
 
       const date = splitted[3].trim()

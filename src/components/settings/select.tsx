@@ -76,6 +76,9 @@ export const SelectSetting = (props) => {
                                     setModalVisible(false)
                                     setNewValue(option)
                                     AsyncStorage.setItem(props.setting_name, option)
+                                    if (props.afterSelect) {
+                                        props.afterSelect(props.setting_name)
+                                    }
                                 }}
                             >
                                 <Text style={styles.item}>{props.options[option]}</Text>

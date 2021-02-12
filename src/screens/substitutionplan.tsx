@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, Switch, View, StyleSheet, ViewStyle, TextStyle, RefreshControl, Alert, Pressable, SectionList } from 'react-native';
+import { Text, Switch, View, StyleSheet, ViewStyle, TextStyle, SectionList, Button } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import { PlanItem } from '../components/planitem';
 import { ListError } from '../components/listError'
@@ -11,9 +11,10 @@ import { IservWrapper } from '../iservscrapping/iservWrapper';
 
 
 export default function SubstitutionScreen({ navigation }) {
+
     const { colors, isDark } = useTheme();
 
-    const [isNextDay, setIsNextDay] = useState(false);
+    const [isNextDay, setIsNextDay] = useState(true);
     const [loaded, setLoaded] = useState(false)
     const [error, setError] = useState(null)
     const errorToText = (e: String) => {
@@ -56,6 +57,9 @@ export default function SubstitutionScreen({ navigation }) {
         load_plan(false)
     }, []);
 
+
+
+
     interface Style {
         background: ViewStyle;
         daySwitchContainer: ViewStyle;
@@ -63,9 +67,10 @@ export default function SubstitutionScreen({ navigation }) {
         daySwitch: ViewStyle;
         header: ViewStyle;
         courseHeader: TextStyle;
-        noItemsFoundText: TextStyle;
         errorText: TextStyle;
         errorIcon: ViewStyle;
+        listHeader: TextStyle;
+        noItems: ViewStyle;
     }
     const styles = StyleSheet.create<Style>({
         background: {
@@ -79,7 +84,8 @@ export default function SubstitutionScreen({ navigation }) {
             flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            marginRight: 8
         },
         daySwitch: {
 
@@ -94,11 +100,6 @@ export default function SubstitutionScreen({ navigation }) {
             color: colors.text,
             marginTop: 16,
         },
-        noItemsFoundText: {
-            paddingTop: 32,
-            textAlign: "center",
-            color: colors.text
-        },
         errorIcon: {
             color: colors.primary,
             fontSize: 100,
@@ -111,17 +112,22 @@ export default function SubstitutionScreen({ navigation }) {
             fontSize: 20,
             textAlign: "center",
         },
+        listHeader: {
+            color: colors.text,
+            marginLeft: 16
+            
+        },
+        noItems: {
+
+            marginLeft: 32,
+            marginRight: 32,
+        }
 
     })
 
-    return (
-
-        <View style={styles.background}>
-            <View style={styles.header}>
-                <Header action="drawer" title="Vertretungsplan" openDrawer={() => {
-                    navigation.openDrawer()
-                }}></Header>
-
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
                 <View style={styles.daySwitchContainer}>
                     <Text style={styles.defaultText}>Heute</Text>
                     <Switch
@@ -134,12 +140,29 @@ export default function SubstitutionScreen({ navigation }) {
                     <Text style={styles.defaultText}>Morgen</Text>
 
                 </View>
-            </View>
+            ),
+        });
+    }, [navigation, isNextDay, styles, toggleSwitch]);
+
+    return (
+
+        <View style={styles.background}>
 
             <SectionList
                 sections={data.plan}
                 refreshing={!loaded}
                 onRefresh={refresh}
+                ListHeaderComponent={() => {
+                    if (loaded) {
+                        return (
+                            <Text style={styles.listHeader}>{data.date}, {data.week} Woche</Text>
+                        )
+                    } else {
+                        return <></>
+                    }
+
+                }}
+                ListFooterComponent={() => { return (<View style={{ height: 20 }} />) }}
                 style={{ padding: 8 }}
                 keyExtractor={(item, index) => item + index}
                 renderItem={({ item }) => <PlanItem content={item} />}
@@ -148,11 +171,26 @@ export default function SubstitutionScreen({ navigation }) {
                 )}
                 ListEmptyComponent={() => {
                     if (error) {
-                        return ListError({ props: { error: error, icon: "bug" } })
+                        return ListError({ error: error, icon: "bug" })
                     } else if (!loaded) {
                         return <></>
                     } else {
-                        return ListError({ props: { error: "Keine Einträge für deine Klassen. Du kannst deine Klassen in den Einstellungen ändern", icon: "search" } })
+                        // return ListError({ error: "Keine Einträge für deine Klassen. Du kannst deine Klassen in den Einstellungen ändern", icon: "search" })
+                        return (
+                            <>
+
+                                <View style={styles.noItems}>
+                                    <ListError
+                                        error="Keine Einträge für deine Klassen. Du kannst deine Klassen in den Einstellungen ändern"
+                                        icon="search"
+
+                                    />
+                                    <View style={{ marginBottom: 16 }}></View>
+                                    <Button onPress={() => navigation.navigate("Settings")} color={colors.primary} title="Einstellungen"></Button>
+                                </View>
+
+                            </>
+                        )
                     }
 
                 }}

@@ -18,6 +18,7 @@ export const BirthdayItem = (props) => {
         itemContainer: {
             backgroundColor: props.highlighted ? colors.primary : colors.background2,
             padding: 20,
+            borderRadius: 8, 
             margin: 8
         },
         itemTitle: {

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Button, Text, View, StyleSheet, ViewStyle } from 'react-native';
-import type { Type } from "react-native"
 import { useTheme } from '../theme/themeprovider';
 
 export default function ClassTestsScreen({ navigation }) {

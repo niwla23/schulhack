@@ -55,7 +55,7 @@ export class untisPlanParser {
                         row.children().each(function (index2, column) {
                             column = $(column)
                             if (column.text().trim()) {
-                                parsedRow[contentHeaderList[index2]] = column.text();
+                                parsedRow[contentHeaderList[index2]] = column.html();
                             } else {
                                 parsedRow[contentHeaderList[index2]] = null;
                             }

@@ -1,7 +1,16 @@
 import { IservScrapper } from "./iservScrapper"
 import * as Keychain from 'react-native-keychain';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import dayjs from "dayjs"
+import relativeTIme from "dayjs/plugin/relativeTime"
+import { relativeTime } from "dayjs/locale/*";
+import { Task } from "./types";
+var _ = require('lodash');
+require('dayjs/locale/de')
 
+
+dayjs.extend(relativeTIme)
+dayjs.locale("de")
 
 export class IservWrapper {
     iserv: IservScrapper | null
@@ -18,6 +27,41 @@ export class IservWrapper {
             this.iserv = new IservScrapper(server, user, password)
         } catch {
             throw new Error("Login Error")
+        }
+
+    }
+
+    async forceLogin() {
+        return await this.iserv?.login()
+    }
+
+    async loadCookieOrLogin() {
+        const expires_raw = await AsyncStorage.getItem("@cookie_expires")
+        var expires
+        if (expires_raw) {
+            expires = new Date(expires_raw)
+        } else {
+            expires = new Date(0)
+        }
+
+        if (expires < new Date) {
+            const cookies = await this.forceLogin()
+            var expiresDate = new Date()
+            expiresDate.setMinutes(expiresDate.getMinutes() + 15)
+            AsyncStorage.setItem("@cookie_expires", expiresDate.toISOString())
+            if (cookies) {
+                AsyncStorage.setItem("@cookie", cookies.toString())
+            } else {
+                throw new Error("login failed")
+            }
+
+        } else {
+            if (this.iserv) {
+                this.iserv.cookies = await AsyncStorage.getItem("@cookie")
+            } else {
+                throw new Error("not initialized")
+            }
+
         }
 
     }
@@ -41,42 +85,37 @@ export class IservWrapper {
         }
         const courses: Array<String> = JSON.parse(courses_raw)
         if (this.iserv) {
-            await this.iserv.login()
+            // await this.iserv.login()
+            await this.loadCookieOrLogin()
             var raw = await this.iserv.get_substitution_plan(dayToPath[isNextDay], courses)
             const plan = raw.plan
-            console.log(JSON.stringify(raw))
             var result = []
             for (const course in plan) {
-                console.log(`${course}: ${plan[course]}`);
                 result.push({
                     title: course,
                     data: plan[course]
                 })
             }
-            console.log(JSON.stringify(result))
             return { plan: result, date: raw.date, week: raw.week }
+            // return {plan: [], date: "", week: ""}
         } else {
             throw new Error("Not initialized. Please call .init() first.")
         }
     }
 
     _createDateString(date: Date) {
-        const day = ("0" + date.getDate()).slice(-2)
-        const month = ("0" + date.getMonth() + 1).slice(-2)
-        const year = date.getFullYear()
-        const hour = ("0" + date.getHours()).slice(-2)
-        const minute = ("0" + date.getMinutes()).slice(-2)
-        return `${day}.${month}.${year} um ${hour}:${minute}`
+        return dayjs().to(dayjs(date))
     }
 
     async getTasksOverview() {
-        await this.iserv?.login()
+        // await this.iserv?.login()
+        await this.loadCookieOrLogin()
         const raw = await this.iserv?.getTasksOverview()
 
         var result = [
             { title: "Überfällig", data: [] },
-            { title: "Dringend", data: [] },
-            { title: "7 Tage", data: [] },
+            { title: "Nächste 24 Stunden", data: [] },
+            { title: "Nächste 7 Tage", data: [] },
             { title: "Irgendwann", data: [] },
             { title: "Fertig", data: [] },
             { title: "Nicht abgegeben", data: [] },
@@ -89,40 +128,48 @@ export class IservWrapper {
 
 
         const importantDate = new Date()
-        importantDate.setDate(importantDate.getDate() + 2)
+        importantDate.setHours(importantDate.getHours() + 24)
 
         raw?.forEach(task => {
             const taskEnd = task.end
-
+            task.original = _.cloneDeep(task)
             task.end = this._createDateString(task.end)
             task.start = this._createDateString(task.start)
+
             const taskTimeout = new Date()
             taskTimeout.setDate(taskEnd.getDate() + 7)
 
-            if (taskEnd < new Date() && taskEnd > taskTimeout && !task.done) {
+            if (taskEnd < new Date() && taskEnd < taskTimeout && !task.done) {
+                // overdue
                 delete task.done
                 delete task.feedback
                 result[0].data.push(task)
             } else if (taskEnd < new Date() && !task.done) {
+                // long overdue
                 delete task.done
                 result[5].data.push(task)
             } else if (taskEnd < importantDate && taskEnd > new Date() && !task.done) {
+                // important
                 delete task.done
                 delete task.feedback
                 result[1].data.push(task)
             } else if (taskEnd < in7Days && taskEnd > new Date() && !task.done) {
+                // 7 days
                 delete task.done
                 delete task.feedback
                 result[2].data.push(task)
             } else if (!task.done) {
+                // in long time
                 delete task.done
                 delete task.feedback
                 result[3].data.push(task)
 
             } else if (task.done) {
+                // done
                 delete task.done
                 result[4].data.push(task)
             } else {
+                // error
                 result[6].data.push(task)
             }
         });
@@ -135,8 +182,19 @@ export class IservWrapper {
         });
         return cleanedResult
     }
+
+    async getTaskDetails(id: Number): Promise<Task | undefined> {
+        await this.loadCookieOrLogin()
+        return await this.iserv?.getTaskDetails(id)
+    }
+
+    async setTaskDoneState(id: Number, state: Boolean): Promise<Boolean | undefined> {
+        await this.loadCookieOrLogin()
+        return await this.iserv?.setTaskDoneState(id, state)
+    }
+
     async getBirthdays() {
-        await this.iserv?.login()
+        await this.loadCookieOrLogin()
         const raw = await this.iserv?.getBirthdays()
         var formatted = []
         raw?.forEach(element => {
@@ -144,7 +202,7 @@ export class IservWrapper {
             var highlight = false
             var formattedDate = ""
             if (element.date.becomes && element.date.when !== "heute") {
-                formattedDate = `wird in ${date.when} ${date.becomes}`
+                formattedDate = `wird ${date.when} ${date.becomes}`
             } else if (element.date.becomes && element.date.when === "heute") {
                 formattedDate = `wird heute ${date.becomes}`
                 highlight = true
@@ -152,7 +210,7 @@ export class IservWrapper {
                 formattedDate = `hat heute Geburtstag`
                 highlight = true
             } else {
-                formattedDate = `hat in ${date.when} Geburtstag`
+                formattedDate = `hat ${date.when} Geburtstag`
             }
             formatted.push({
                 name: element.name,

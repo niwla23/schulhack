@@ -1,7 +1,6 @@
 "use strict"
 
-import { parse } from "path";
-
+import { Task, IservFile } from './types'
 const cheerio = require('react-native-cheerio');
 
 
@@ -18,9 +17,12 @@ type row = {
 }
 
 
-function parseDate(input) {
+function parseDate(input: String) {
     var parts = input.match(/(\d+)/g);
-    return new Date(parts[2], parts[1] - 1, parts[0]);
+    if (parts) {
+        return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+    }
+
 }
 
 
@@ -64,6 +66,8 @@ export function parseTasksOverview(input: String) {
                     parsedRow[contentHeaderList[index2]] = column.text() === "(keine)" ? "" : column.text()
                 } else {
                     parsedRow[contentHeaderList[index2]] = column.text()
+                    const url = ($(column.children()[0]).attr("href").split("/"))
+                    parsedRow.id = Number(url[url.length - 1])
                 }
 
             }
@@ -74,5 +78,86 @@ export function parseTasksOverview(input: String) {
     });
 
     return parsed;
+
+}
+
+function _getIconName(filename: String) {
+    const icon_map = {
+        "file-ftext.png": "text"
+    }
+    return icon_map[filename] || "file"
+}
+
+
+
+export function parseTaskDetails(input: String, baseUrl: String): Object {
+    var task: Task = {}
+    const $ = cheerio.load(input)
+
+    task.from = $($(".mailto")[0]).text().trim()
+    // start and end can be parsed on overview so no need to do this here actually.
+    task.description = $($(".text-break-word")[0]).html().trim()
+
+    // get task type
+    if ($("#confirmation").length > 0) {
+        task.type = "confirmation"
+        // do nothing since we already now if it is done
+    } else if ($(".file-universal-upload-button").length > 0) {
+        task.type = "upload"
+        // TODO
+    } else {
+        task.type = "text"
+        // TODO
+    }
+
+    // get provided files
+    task.providedFiles = []
+
+    $($(".table-condensed > tbody")[0]).children().each(function (_index: Number, file) {
+        file = $(file)
+
+        var parsedFile: IservFile = {}
+        parsedFile.name = $(file.children()[0]).text() // Title
+        parsedFile.size = $(file.children()[1]).text() // Size
+        parsedFile.url = baseUrl + $($(file.children()[2]).find("a")[1]).attr("href") // URL
+        if (!$($(file.children()[2]).find("a")[1]).attr("href")) {
+            return
+        }
+        // parsedFile.type = _getIconName(file.find(".legacy-icon").attr("src").split("/").pop()) // ICon name
+        parsedFile.type = "file"
+        task.providedFiles?.push(parsedFile)
+    })
+
+    if (task.type === "upload") {
+        task.uploadedFiles = []
+        const tableIndex = task.providedFiles.length > 0 ? 1 : 0
+        $($(".table-condensed > tbody")[tableIndex]).children().each(function (_index, file) {
+            file = $(file)
+
+            var parsedFile: IservFile = {}
+            parsedFile.name = $(file.children()[1]).text().trim() // Title
+            parsedFile.url = baseUrl + $($(file.children()[1]).children()[0]).attr("href")// URL
+            parsedFile.size = $(file.children()[2]).text().trim() // Size
+            parsedFile.type = "file"
+            task.uploadedFiles?.push(parsedFile)
+        })
+        try {
+            task.feedbackText = $(".col-md-12 > .panel > .panel-body").html().trim()
+        } catch {
+            task.feedbackText = undefined
+        }
+    } else if (task.type === "text") {
+        task.uploadedText = $(".col-md-12 > .panel > .panel-body").html().replace("Bearbeiten", "").trim()
+        try {
+            task.feedbackText = $(".col-md-6 > .panel > .panel-body").html().trim()
+        } catch {
+            task.feedbackText = undefined
+        }
+
+    }
+
+
+
+    return task;
 
 }
