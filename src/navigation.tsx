@@ -1,241 +1,269 @@
 import React, { useEffect, useState } from 'react';
 import {
-    SafeAreaView,
     StyleSheet,
-    ScrollView,
     View,
-    Text,
     StatusBar,
-    ImageBackground,
-    Dimensions,
-    useWindowDimensions,
+    TouchableOpacity,
 } from 'react-native';
-import {
-    createDrawerNavigator,
-    DrawerContentScrollView,
-    DrawerItemList,
-    DrawerItem,
-} from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { AppearanceProvider } from 'react-native-appearance';
-import { ThemeProvider, useTheme } from './theme/themeprovider';
+import { useTheme } from './theme/themeprovider';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import SubstitutionScreen from "./screens/substitutionplan"
 import TasksScreen from "./screens/tasks"
-import ClassTestsScreen from "./screens/classtests"
+import TaskDetailsScreen from "./screens/taskdetails"
 import BirthdaysScreen from "./screens/birthdays"
 import SettingsScreen from "./screens/settings"
 import LoginScreen from './screens/login';
-import MenuScreen from './screens/menu'
 import InfoScreen from './screens/info'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Keychain from 'react-native-keychain';
+import RNBootSplash from "react-native-bootsplash";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack'
 
-
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+const SubstitutionPlanStack = createStackNavigator();
+const TaskStack = createStackNavigator();
+const BirthdaysStack = createStackNavigator();
+const SettingsStack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export interface Props { }
 
+const SubstitutionPlanNavigation: React.FC<Props> = (props) => {
+    return (
+        <SubstitutionPlanStack.Navigator
+            headerMode="screen"
+        >
+            <SubstitutionPlanStack.Screen
+                name="Main"
+                options={{ title: 'Vertretungsplan' }}
+                component={SubstitutionScreen}
+            />
+
+        </SubstitutionPlanStack.Navigator>
+    )
+}
+
+const TasksNavigation: React.FC<Props> = (props) => {
+    return (
+        <TaskStack.Navigator
+            headerMode="screen"
+            headerTintColor="#fff"
+        >
+            <TaskStack.Screen name="Tasks" options={{ title: 'Aufgaben' }} component={TasksScreen} />
+            <TaskStack.Screen name="TaskDetails" options={{ title: 'Aufgabendetails' }} component={TaskDetailsScreen} />
+
+        </TaskStack.Navigator>
+    )
+}
+
+const BirthdaysNavigation: React.FC<Props> = (props) => {
+    return (
+        <BirthdaysStack.Navigator
+            headerMode="screen"
+        >
+            <BirthdaysStack.Screen
+                name="Main"
+                options={{ title: 'Geburtstage' }}
+                component={BirthdaysScreen}
+            />
+
+        </BirthdaysStack.Navigator>
+    )
+}
+
+const SettingsNavigation: React.FC<Props> = (props) => {
+    return (
+        <SettingsStack.Navigator
+            headerMode="screen"
+        >
+            <SettingsStack.Screen
+                name="Main"
+                options={{ title: 'Einstellungen' }}
+                component={SettingsScreen}
+            />
+
+        </SettingsStack.Navigator>
+    )
+}
+
+
+
+
+const AppNavigation: React.FC<Props> = (props) => {
+    const { colors, isDark } = useTheme();
+    const styles = StyleSheet.create({
+        icon: {
+            color: colors.text,
+            fontSize: 22,
+            margin: 16,
+            textAlign: "center"
+        }
+    })
+
+    function CustomTabBar({ state, descriptors, navigation }) {
+        const focusedOptions = descriptors[state.routes[state.index].key].options;
+
+        if (focusedOptions.tabBarVisible === false) {
+            return null;
+        }
+
+        return (
+            <View style={{
+                flexDirection: 'row',
+                backgroundColor: colors.background,
+                justifyContent: "space-around",
+                alignItems: "center",
+                alignContent: "center",
+                alignSelf: "center",
+                width: "100%",
+
+            }}>
+                {state.routes.map((route, index) => {
+                    const { options } = descriptors[route.key];
+
+                    const isFocused = state.index === index;
+
+                    const onPress = () => {
+                        const event = navigation.emit({
+                            type: 'tabPress',
+                            target: route.key,
+                            canPreventDefault: true,
+                        });
+
+                        if (!isFocused && !event.defaultPrevented) {
+                            navigation.navigate(route.name);
+                        }
+                    };
+
+                    const onLongPress = () => {
+                        navigation.emit({
+                            type: 'tabLongPress',
+                            target: route.key,
+                        });
+                    };
+
+                    let iconName;
+
+                    if (route.name === 'SubstitutionPlan') {
+                        iconName = 'exchange-alt';
+                    } else if (route.name === 'Tasks') {
+                        iconName = "tasks";
+                    } else if (route.name === 'Birthdays') {
+                        iconName = "birthday-cake";
+                    } else if (route.name === 'Settings') {
+                        iconName = "cog";
+                    }
+
+                    return (
+                        <TouchableOpacity
+                            key={index}
+                            accessibilityRole="button"
+                            accessibilityState={isFocused ? { selected: true } : {}}
+                            accessibilityLabel={options.tabBarAccessibilityLabel}
+                            testID={options.tabBarTestID}
+                            onPress={onPress}
+                            onLongPress={onLongPress}
+                            style={{
+                                flex: 1,
+                                backgroundColor: isFocused ? colors.primary : colors.background,
+                                borderRadius: 8,
+                                margin: 5
+                            }}
+                        >
+                            <FontAwesome5 name={iconName} style={styles.icon}></FontAwesome5>
+                        </TouchableOpacity>
+                    );
+                })}
+            </View>
+        );
+    }
+
+    return (
+        <Tab.Navigator
+            tabBar={props => <CustomTabBar {...props} />}
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+
+                    if (route.name === 'SubstitutionPlan') {
+                        iconName = 'exchange-alt';
+                    } else if (route.name === 'Tasks') {
+                        iconName = "tasks";
+                    } else if (route.name === 'Birthdays') {
+                        iconName = "birthday-cake";
+                    } else if (route.name === 'Settings') {
+                        iconName = "cog";
+                    }
+
+                    return <FontAwesome5 name={iconName} style={styles.icon}></FontAwesome5>;
+                },
+            })}
+
+            tabBarOptions={{
+                inactiveBackgroundColor: colors.background,
+                activeBackgroundColor: colors.primary,
+                showLabel: false,
+
+            }}
+        >
+            <Tab.Screen name="SubstitutionPlan" component={SubstitutionPlanNavigation} />
+            <Tab.Screen name="Tasks" options={{ tabBarBadge: 3 }} component={TasksNavigation} />
+            <Tab.Screen name="Birthdays" component={BirthdaysNavigation} />
+            <Tab.Screen name="Settings" component={SettingsNavigation} />
+        </Tab.Navigator >
+    )
+}
 
 export const Navigation: React.FC<Props> = (props) => {
-
-
+    const [isLoggedIn, setIsLoggedIn] = useState(true)
 
     useEffect(() => {
-        // Lets pretend that this does not exist. Just skip to line 68
-        // Keychain.getGenericPassword().then(r => {
-        //     setUserName(r.username)
-        // })
-        // AsyncStorage.getItem("@server").then(r => {
-        //     setServer(r)
-        // })
+        AsyncStorage.getItem("@intro_shown").then(intro_shown => {
+            if (!intro_shown) {
+                setIsLoggedIn(false)
+            }
 
-        const hack = setInterval(() => {
-            Keychain.getGenericPassword().then(r => {
-                setUserName(r.username)
-            })
-            AsyncStorage.getItem("@server").then(r => {
-                setServer(r?.split("://")[1])
-            })
-        }, 1000);
+            RNBootSplash.hide({ fade: false });
+        })
+
     }, []);
 
 
     const { colors, isDark } = useTheme();
-    const styles = StyleSheet.create({
-        drawer: {
-            backgroundColor: colors.background,
-            width: "100%"
+
+    // Invisible screens go here
+    const stackContent = isLoggedIn ?
+        <>
+            <Stack.Screen name="App" component={AppNavigation} />
+            <Stack.Screen name="Info" component={InfoScreen} />
+        </> :
+        <>
+            <Stack.Screen name="Login" component={LoginScreen} initialParams={{ setIsLoggedIn: setIsLoggedIn }} />
+            <Stack.Screen name="Info" component={InfoScreen} />
+
+        </>
+
+    const Theme = {
+        dark: isDark,
+        colors: {
+            primary: colors.primary,
+            background: colors.background,
+            card: colors.background3,
+            text: colors.text,
+            border: colors.background,
+            notification: colors.secondary,
         },
-        drawerItemLabel: {
-            color: colors.text,
-            width: "100%"
-        },
-        appTitle: {
-            color: "#fff",
-            textShadowRadius: 20,
-            textShadowColor: "#000",
-            fontSize: 32,
-            fontWeight: "bold"
-        },
-        appSubTitle: {
-            color: "#fff",
-            fontSize: 16,
-            textShadowRadius: 15,
-            textShadowColor: "#000",
-            fontWeight: "bold"
-        },
-        appHeader: {
-            padding: 20,
-            paddingTop: "60%",
-            marginTop: -4,
-            flex: 1,
-        },
-        icon: {
-            color: colors.text,
-            marginRight: -15,
-            fontSize: 16
-
-        }
-    });
-
-    const [userName, setUserName] = useState("laden")
-    const [server, setServer] = useState("laden")
-
-    function CustomDrawerContent(props) {
-        AsyncStorage.getItem("@intro_shown").then(intro_shown => {
-            if (!intro_shown) {
-                props.navigation.navigate("Login")
-                return
-            }
-        })
-
-        return (
-            <DrawerContentScrollView {...props}>
-                <ImageBackground source={require("../assets/background.jpg")} style={styles.appHeader}>
-                    <Text style={styles.appTitle}>SchulHack</Text>
-                    <Text style={styles.appSubTitle}>{userName}@{server}</Text>
-                </ImageBackground>
-
-                <DrawerItem
-                    label="Vertretungsplan"
-                    labelStyle={styles.drawerItemLabel}
-                    icon={SubstitutionPlanIcon}
-                    focused={false}
-                    activeTintColor={colors.primary}
-                    onPress={() => props.navigation.navigate("SubstitutionPlan")}
-                />
-                <DrawerItem
-                    label="Aufgaben"
-                    labelStyle={styles.drawerItemLabel}
-                    icon={TasksIcon}
-                    onPress={() => props.navigation.navigate("Tasks")}
-                />
-                {/* <DrawerItem
-                    label="Arbeiten"
-                    labelStyle={styles.drawerItemLabel}
-                    icon={ClassTestsIcon}
-                    onPress={() => props.navigation.navigate("ClassTests")}
-                /> */}
-                <DrawerItem
-                    label="Geburtstage"
-                    labelStyle={styles.drawerItemLabel}
-                    icon={BirthdayIcon}
-                    onPress={() => props.navigation.navigate("Birthdays")}
-                />
-                <DrawerItem
-                    label="Einstellungen"
-                    labelStyle={styles.drawerItemLabel}
-                    icon={SettingsIcon}
-                    onPress={() => props.navigation.navigate("Settings")}
-                />
-            </DrawerContentScrollView>
-        );
-    }
-
-    function SubstitutionPlanIcon() {
-        return (
-            <FontAwesome5 name="exchange-alt" style={styles.icon}></FontAwesome5>
-        )
-    }
-
-    function TasksIcon() {
-        return (
-            <FontAwesome5 name="tasks" style={styles.icon}></FontAwesome5>
-        )
-    }
-
-    function ClassTestsIcon() {
-        return (
-            <FontAwesome5 name="poo" style={styles.icon}></FontAwesome5>
-        )
-    }
-
-    function BirthdayIcon() {
-        return (
-            <FontAwesome5 name="birthday-cake" style={styles.icon}></FontAwesome5>
-        )
-    }
-
-    function SettingsIcon() {
-        return (
-            <FontAwesome5 name="cog" style={styles.icon}></FontAwesome5>
-        )
-    }
-
-    const dimensions = useWindowDimensions()
-
+    };
     return (
-        <NavigationContainer>
-            <Drawer.Navigator
-                initialRouteName="SubstitutionPlan"
-                drawerStyle={styles.drawer}
-                drawerType={dimensions.width >= 768 ? 'permanent' : 'slide'}
-                drawerContent={CustomDrawerContent}
-            >
-                <Drawer.Screen
-                    name="SubstitutionPlan"
-                    options={{ title: "Vertretungsplan", drawerIcon: SubstitutionPlanIcon }}
-                    component={SubstitutionScreen}
-                />
-                <Drawer.Screen
-                    name="Tasks"
-                    options={{ title: "Aufgaben", drawerIcon: TasksIcon }}
-                    component={TasksScreen}
-                />
-                <Drawer.Screen
-                    name="ClassTests"
-                    options={{ title: "Arbeiten", drawerIcon: ClassTestsIcon }}
-                    component={ClassTestsScreen}
-                />
-                <Drawer.Screen
-                    name="Birthdays"
-                    options={{ title: "Geburtstage", drawerIcon: BirthdayIcon }}
-                    component={BirthdaysScreen}
-                />
-                <Drawer.Screen
-                    name="Settings"
-                    options={{ title: "Einstellungen", drawerIcon: SettingsIcon }}
-                    component={SettingsScreen}
-                />
-                <Drawer.Screen
-                    name="Info"
-                    options={{ title: "Über diese App", drawerIcon: SettingsIcon }}
-                    component={InfoScreen}
-                />
-                <Drawer.Screen
-                    name="Login"
-                    options={{ title: "Anmelden", swipeEnabled: false }}
-                    component={LoginScreen}
-                />
-                <Drawer.Screen
-                    name="Menu"
-                    options={{ title: "Menü", swipeEnabled: false }}
-                    component={MenuScreen}
-                />
-            </Drawer.Navigator>
+        <NavigationContainer theme={Theme}>
+            <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.background}></StatusBar>
+            <Stack.Navigator headerMode="none">
+                {stackContent}
+
+            </Stack.Navigator>
         </NavigationContainer>
 
     );

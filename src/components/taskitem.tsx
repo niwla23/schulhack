@@ -5,6 +5,7 @@ import React from 'react';
 import { Tag } from './tag'
 import { useTheme } from '../theme/themeprovider';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { useNavigation } from '@react-navigation/native';
 
 const keys_to_labels = {
     start: "Start",
@@ -13,6 +14,8 @@ const keys_to_labels = {
     feedback: "Rückmeldung",
     tags: "Tags"
 }
+
+
 
 export const TaskItem = (props) => {
     const { colors, isDark } = useTheme();
@@ -29,8 +32,10 @@ export const TaskItem = (props) => {
         itemContainer: {
             marginTop: 16,
             backgroundColor: colors.background2,
+            borderRadius: 8,
             padding: 20,
-            paddingBottom: 10
+            paddingBottom: 10,
+            elevation: 0
         },
         itemTitle: {
             fontSize: 20,
@@ -39,7 +44,7 @@ export const TaskItem = (props) => {
         },
         itemContent: {
             marginTop: 8,
-            padding: 8,
+
             fontSize: 18,
             fontWeight: '400',
             color: "#fff",
@@ -51,38 +56,44 @@ export const TaskItem = (props) => {
         },
         detailsText: {
             textAlign: "right",
-            color: colors.text,
+            color: "#fff",
             fontSize: 18
         },
         detailsIcon: {
             margin: 10
-        }
+        },
     });
 
     function getTagContent(text: String) {
         if (text === "true") {
-            return <FontAwesome5 style={{fontSize: 18}} name="check" />
+            return <FontAwesome5 style={{ fontSize: 18 }} name="check" />
         } else if (text === "false") {
-            return <FontAwesome5 style={{fontSize: 18}} name="times" />
+            return <FontAwesome5 style={{ fontSize: 18 }} name="times" />
         } else {
             return text
         }
     }
 
+    const navigation = useNavigation()
+
     return (
         <View style={styles.itemContainer}>
             <Text style={styles.itemTitle}>{props.content.task}</Text>
-            <View style={styles.itemContent}>
+            <Text style={styles.itemContent}>
                 {Object.keys(props.content).map((propertyName, index) =>
                     props.content[propertyName] != props.course &&
-                    
                     <Tag key={index} header={keys_to_labels[propertyName]} content={getTagContent(props.content[propertyName].toString())} />
-                    
                 )}
-            </View>
-            <Pressable style={styles.detailsContainer} android_ripple={{ color: colors.background, borderless: false }} >
+            </Text>
+            <Pressable onPress={() => {
+                // navigation.navigate("Tasks", { task: props.content, screen: "TaskDetails" })
+                navigation.navigate('App', {
+                    screen: 'Tasks',
+                    params: { screen: 'TaskDetails', params: { task: props.content } },
+                });
+            }
+            } style={styles.detailsContainer} android_ripple={{ color: colors.background, borderless: false }} >
                 <Text style={styles.detailsText}>Details  <FontAwesome5 name="arrow-right" style={styles.detailsIcon} /></Text>
-
             </Pressable>
 
 

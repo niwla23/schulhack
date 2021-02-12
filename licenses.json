@@ -1,0 +1,134 @@
+{
+    "@react-native-async-storage/async-storage@1.13.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/react-native-async-storage/async-storage",
+        "licenseUrl": "https://github.com/react-native-async-storage/async-storage/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "@react-native-community/checkbox@0.5.7": {
+        "licenses": "MIT",
+        "repository": "https://github.com/react-native-community/react-native-checkbox",
+        "licenseUrl": "https://github.com/react-native-community/react-native-checkbox",
+        "parents": "SchulHack"
+    },
+    "@react-native-community/masked-view@0.1.10": {
+        "licenses": "MIT",
+        "repository": "https://github.com/react-native-community/react-native-masked-view",
+        "licenseUrl": "https://github.com/react-native-community/react-native-masked-view",
+        "parents": "SchulHack"
+    },
+    "@react-navigation/bottom-tabs@5.11.7": {
+        "licenses": "MIT",
+        "repository": "https://github.com/react-navigation/react-navigation",
+        "licenseUrl": "https://github.com/react-navigation/react-navigation/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "@react-navigation/native@5.8.10": {
+        "licenses": "MIT",
+        "repository": "https://github.com/react-navigation/react-navigation",
+        "licenseUrl": "https://github.com/react-navigation/react-navigation/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "@react-navigation/stack@5.14.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/react-navigation/react-navigation",
+        "licenseUrl": "https://github.com/react-navigation/react-navigation/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "axios@0.21.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/axios/axios",
+        "licenseUrl": "https://github.com/axios/axios/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "dayjs@1.10.4": {
+        "licenses": "MIT",
+        "repository": "https://github.com/iamkun/dayjs",
+        "licenseUrl": "https://github.com/iamkun/dayjs/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "lodash@4.17.20": {
+        "licenses": "MIT",
+        "repository": "https://github.com/lodash/lodash",
+        "licenseUrl": "https://github.com/lodash/lodash/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-appearance@0.3.4": {
+        "licenses": "MIT",
+        "repository": "https://github.com/expo/react-native-appearance",
+        "licenseUrl": "https://github.com/expo/react-native-appearance/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-bootsplash@3.1.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/zoontek/react-native-bootsplash",
+        "licenseUrl": "https://github.com/zoontek/react-native-bootsplash/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-cheerio@1.0.0-rc.4": {
+        "licenses": "MIT",
+        "repository": "https://github.com/leon-4A6C/react-native-cheerio",
+        "licenseUrl": "https://github.com/leon-4A6C/react-native-cheerio/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-gesture-handler@1.9.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/software-mansion/react-native-gesture-handler",
+        "licenseUrl": "https://github.com/software-mansion/react-native-gesture-handler/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-keychain@6.2.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/oblador/react-native-keychain",
+        "licenseUrl": "https://github.com/oblador/react-native-keychain/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-reanimated@1.13.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/software-mansion/react-native-reanimated",
+        "licenseUrl": "https://github.com/software-mansion/react-native-reanimated/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-render-html@5.0.1": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/archriss/react-native-render-html",
+        "licenseUrl": "https://github.com/archriss/react-native-render-html/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-restart@0.0.20": {
+        "licenses": "MIT",
+        "repository": "https://github.com/avishayil/react-native-restart",
+        "licenseUrl": "https://github.com/avishayil/react-native-restart/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-safe-area-context@3.1.9": {
+        "licenses": "MIT",
+        "repository": "https://github.com/th3rdwave/react-native-safe-area-context",
+        "licenseUrl": "https://github.com/th3rdwave/react-native-safe-area-context/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-screens@2.16.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/kmagiera/react-native-screens",
+        "licenseUrl": "https://github.com/kmagiera/react-native-screens/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-vector-icons@7.1.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/oblador/react-native-vector-icons",
+        "licenseUrl": "https://github.com/oblador/react-native-vector-icons/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native@0.63.4": {
+        "licenses": "MIT",
+        "repository": "https://github.com/facebook/react-native",
+        "licenseUrl": "https://github.com/facebook/react-native/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react@16.13.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/facebook/react",
+        "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
+        "parents": "SchulHack"
+    }
+}

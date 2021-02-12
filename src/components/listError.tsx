@@ -5,7 +5,7 @@ import { Text, View, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-export function ListError({ props }) {
+export const ListError = (props) => {
     const { colors, isDark } = useTheme();
     interface Style {
         noItemsFoundText: TextStyle;

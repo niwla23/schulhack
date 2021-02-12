@@ -4,6 +4,7 @@ import { Text, StyleSheet, View, ViewStyle, TextStyle } from 'react-native';
 import React from 'react';
 import { Tag } from './tag'
 import { useTheme } from '../theme/themeprovider';
+import HTML from 'react-native-render-html';
 
 
 const keys_to_labels = {
@@ -27,7 +28,8 @@ export const PlanItem = (props) => {
             marginTop: 16,
             paddingHorizontal: 24,
             backgroundColor: colors.background2,
-            padding: 20
+            padding: 20,
+            borderRadius: 8,
         },
         itemTitle: {
             fontSize: 24,
@@ -45,11 +47,19 @@ export const PlanItem = (props) => {
 
     return (
         <View style={styles.itemContainer}>
-            <Text style={styles.itemTitle}>{props.content.time}</Text>
+            {/* <Text style={styles.itemTitle}>{props.content.time}</Text> */}
+            <HTML ignoredStyles={["color"]} baseFontStyle={styles.itemTitle} source={{ html: props.content.time }}></HTML>
             <Text style={styles.itemContent}>
                 {Object.keys(props.content).map((propertyName, index) =>
                     props.content[propertyName] != props.course &&
-                    <Tag key={index} header={keys_to_labels[propertyName]} content={props.content[propertyName]} />
+                    <Tag
+                        key={index}
+                        header={keys_to_labels[propertyName]}
+                        content={
+                            <HTML ignoredStyles={["color"]} baseFontStyle={{ color: "#000" }} source={{ html: props.content[propertyName] }}></HTML>
+                        } />
+                    // <Tag key={index} header={keys_to_labels[propertyName]} content={props.content[propertyName]} />
+                    // <HTML ignoredStyles={["color"]} baseFontStyle={{color: "#000"}} source={{html: text.toString()}}></HTML>
                 )}
             </Text>
         </View>

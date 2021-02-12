@@ -1,14 +1,15 @@
 "use strict"
 
 import React from 'react';
-import { Button, Text, View, StyleSheet, ViewStyle, Alert } from 'react-native';
+import { View, StyleSheet, ViewStyle } from 'react-native';
 import { TextSetting, LinkSetting, TagsSetting, SelectSetting } from '../components/settings'
 import { useTheme } from '../theme/themeprovider';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Header } from '../components/header'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart';
 
 export default function SettingsScreen({ navigation }) {
-    const { colors, isDark } = useTheme();
+    const { colors } = useTheme();
 
     interface Style {
         background: ViewStyle;
@@ -20,26 +21,23 @@ export default function SettingsScreen({ navigation }) {
             height: "100%"
         },
         mainScrollView: {
-            marginRight: 30,
+            paddingRight: 20,
             width: "100%"
         }
     })
 
     return (
         <View style={styles.background}>
-            <Header action="drawer" title="Einstellungen" openDrawer={() => {
-                navigation.openDrawer()
-            }}/>
             <ScrollView
                 contentInsetAdjustmentBehavior='automatic'
                 style={styles.mainScrollView}
             >
                 <LinkSetting
-                    title="Account wechseln"
-                    value={'username'}
-                    description="Dein Iserv Benutzername. Meistens im Format vorname.nachname"
+                    title="Abmelden"
+                    value={'Melde dich von Iserv ab'}
                     onPress={() => {
-                        navigation.navigate("Login")
+                        AsyncStorage.clear();
+                        RNRestart.Restart();
                     }}
                 />
                 <TagsSetting
@@ -51,11 +49,13 @@ export default function SettingsScreen({ navigation }) {
                 <SelectSetting
                     title="Theme"
                     setting_name="@theme"
+                    afterSelect={(_value: String) => RNRestart.Restart()}
                     options={
                         {
-                            "dark": "Dunkel",
-                            "light": "Hell",
-                            "system": "Systemvorgabe"
+                            "dark": "Dunkel (Orange)",
+                            "darkPink": "Dunkel (Pink)",
+                            "darkGreen": "Dunkel (Grün)",
+                            "light": "Hell"
                         }
                     }
                 />
@@ -75,7 +75,7 @@ export default function SettingsScreen({ navigation }) {
                     title="Über diese App"
                     value="Impressum, Datenschutz, Haftungsauschluss"
                     onPress={() => {
-                        navigation.navigate("Info")
+                        navigation.navigate('Info');
                     }}
                 />
             </ScrollView>
