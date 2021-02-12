@@ -66,9 +66,11 @@ export default function InfoScreen({ navigation }) {
         <ScrollView style={styles.background}>
             <View style={styles.contentContainer}>
                 <Text style={styles.subHeader}>Entwickler</Text>
-                <Text style={styles.text}>Diese App wurde von Alwin Lohrie entwickelt.{"\n"}Der <Link text="Quellcode" url="https://schulhack.tk/source"/> ist öffentlich unter der General Public License zugänglich</Text>
+                <Text style={styles.text}>Diese App wurde von Alwin Lohrie entwickelt.{"\n"}Der <Link text="Quellcode" url="https://schulhack.tk/source" /> ist öffentlich unter der General Public License zugänglich</Text>
                 <Text style={styles.subHeader}>Haftungsauschluss</Text>
-                <Text style={styles.text}>Es wird keine Haftung für vom Benutzer angegebe Server übernommen. Es ist dem Entwickler nicht möglich diese App für alle Iserv Systeme zu testen. Die App kann nur funktionieren wenn der Iserv Server funktioniert und die Pläne an den angegebenen Pfaden vorhanden sind. Außerdem kann keine Haftung für die Richtigkeit der gezeigten Daten übernommen werden.</Text>
+                <Text style={styles.text}>
+                    Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. Es gelten die Nutzungsbedingungen deiner Schule.
+                </Text>
                 <Text style={styles.subHeader}>Datenschutz</Text>
                 <Text style={styles.text}>Diese App sendet keine Daten an andere Server als der, der in den Einstellungen angegeben wurde. An diesen werden beim ersten Start zwei Anfragen gestellt.{"\n"}Die erste dient dem Login. Der angegebene Server sollte mit den Cookies, die für folgende Anfragen verwendet werden können, antworten.{"\n"}Sobald der Server geantwortet hat, wird eine zweite Anfrage gestellt um den Vertretungsplan abzurufen.{"\n"}Das Passwort wird in einer sicheren, sogenannten Keychain gespeichert.{"\n"}Es werden keine Analyse Tools eingesetzt.{"\n"}</Text>
                 <Text style={styles.subHeader}>Open Source</Text>
