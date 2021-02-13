@@ -1,0 +1,8 @@
+Mit dieser App kannst du deinen Vertretungsplan sehen, Aufgaben die du machen musst und die Geburtstage deiner Mitschüler,
+wenn deine Schule Iserv benutzt.
+
+Momentan ist die App nur auf Deutsch verfügbar und funktioniert wahrscheinlich auch nur auf deutschen Iserv Servern.
+
+Disese App stellt eine direkte Verbindung zu Iserv her, es werden keine Daten an andere Server gesendet.
+
+Benutzung auf eigenen Gefahr! Es gelten die Nutzungsbedingungen deiner Schule!

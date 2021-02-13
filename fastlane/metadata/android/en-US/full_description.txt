@@ -1,0 +1,4 @@
+This app allows you to view your substitution plan, see tasks assigned to you and view birthdays of your classmates, if your school uses Iserv! Currently the app is only available in german and birthday view will only work on german instances.
+This app contacts your server directly from your device, no third partys are involved.
+Use at your own risk and read the terms of your schools iserv deployment!
+Feedback and Contributions to the source code are helpful!
