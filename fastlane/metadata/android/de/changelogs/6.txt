@@ -1,0 +1,1 @@
+Fehler in Aufgabendetails behoben, der durch Änderungen an Iserv ausgelöst wurde.

@@ -117,13 +117,10 @@ export function parseTaskDetails(input: String, baseUrl: String): Object {
         file = $(file)
 
         var parsedFile: IservFile = {}
-        parsedFile.name = $(file.children()[0]).text() // Title
-        parsedFile.size = $(file.children()[1]).text() // Size
-        parsedFile.url = baseUrl + $($(file.children()[2]).find("a")[1]).attr("href") // URL
-        if (!$($(file.children()[2]).find("a")[1]).attr("href")) {
-            return
-        }
-        // parsedFile.type = _getIconName(file.find(".legacy-icon").attr("src").split("/").pop()) // ICon name
+        parsedFile.name = $(file.children()[1]).text().trim() // Title
+        parsedFile.size = $(file.children()[2]).text() // Size
+        parsedFile.url = baseUrl + $($($(file.children()[1]).children()[0])[0]).attr("href") // URL
+
         parsedFile.type = "file"
         task.providedFiles?.push(parsedFile)
     })
