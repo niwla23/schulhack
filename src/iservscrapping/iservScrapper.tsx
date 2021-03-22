@@ -75,8 +75,14 @@ export class IservScrapper {
     return parser.parse(courses)
   }
 
-  async getTasksOverview() {
-    let response = await this._authenticated_request("/iserv/exercise"); // ?filter[status]=all
+  async getTasksOverview(all?: Boolean) {
+    let response
+    if (all) {
+      response = await this._authenticated_request("/iserv/exercise?filter[status]=all"); // fetch all tasks
+    } else {
+      response = await this._authenticated_request("/iserv/exercise"); // fetch only current tasks
+    }
+    
     return parseTasksOverview(response.data)
   }
 

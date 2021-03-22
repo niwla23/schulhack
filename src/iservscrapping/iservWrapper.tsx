@@ -107,10 +107,10 @@ export class IservWrapper {
         return dayjs().to(dayjs(date))
     }
 
-    async getTasksOverview() {
+    async getTasksOverview(all?: Boolean) {
         // await this.iserv?.login()
         await this.loadCookieOrLogin()
-        const raw = await this.iserv?.getTasksOverview()
+        const raw = await this.iserv?.getTasksOverview(all)
 
         var result = [
             { title: "Überfällig", data: [] },

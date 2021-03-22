@@ -12,6 +12,7 @@ export default function TasksScreen({ navigation }) {
   const { colors, isDark } = useTheme();
   const [tasks, setTasks] = useState([])
   const [loaded, setLoaded] = useState(false)
+  const [oldLoaded, setOldLoaded] = useState(false)
   const [error, setError] = useState(null)
 
   interface Style {
@@ -20,6 +21,7 @@ export default function TasksScreen({ navigation }) {
     sectionHeaderContainer: ViewStyle;
     sectionHeaderBadge: TextStyle;
     contentScroll: ViewStyle;
+    loadMoreText: TextStyle;
   }
   const styles = StyleSheet.create<Style>({
     background: {
@@ -32,7 +34,7 @@ export default function TasksScreen({ navigation }) {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
-      
+
       marginTop: 16,
       marginLeft: 16,
       marginRight: 16
@@ -48,34 +50,45 @@ export default function TasksScreen({ navigation }) {
       padding: 4,
       width: 30,
       height: 30,
-      borderRadius: 30/2,
+      borderRadius: 30 / 2,
       fontSize: 16,
-      
+
       textAlign: "center"
     },
     contentScroll: {
       padding: 8,
       height: "100%"
+    },
+    loadMoreText: {
+      color: colors.text,
+      paddingBottom: 16,
+      paddingTop: 8,
+      textAlign: "center",
+      textDecorationLine: "underline"
+
     }
   })
 
-  function loadTasks() {
+  function loadTasks(all?: Boolean) {
     setLoaded(false)
     setTasks([])
     setError(null)
     const iserv = new IservWrapper
     iserv.init().then(() => {
-      iserv.getTasksOverview().then(fetchedTasks => {
+      iserv.getTasksOverview(all).then(fetchedTasks => {
         setTasks(fetchedTasks)
         setLoaded(true)
+        if (all) { setOldLoaded(true) }
       })
         .catch(e => {
           setLoaded(true)
+          if (all) { setOldLoaded(true) }
           setError(e.toString())
         })
 
     }).catch(e => {
       setLoaded(true)
+      if (all) { setOldLoaded(true) }
       setError(e.toString())
     })
   }
@@ -93,7 +106,6 @@ export default function TasksScreen({ navigation }) {
         refreshing={!loaded}
         sections={tasks}
         style={styles.contentScroll}
-        ListFooterComponent={()=>{return(<View style={{height: 20}} />)}}
         keyExtractor={(item, index) => item + index}
         renderItem={({ item }) => <TaskItem content={item} />}
         renderSectionHeader={({ section: { title, data } }) => (
@@ -102,6 +114,14 @@ export default function TasksScreen({ navigation }) {
             <Text style={styles.sectionHeaderBadge}>{data.length}</Text>
           </View>
 
+        )}
+        ListFooterComponent={() => (
+          <Text
+            style={styles.loadMoreText}
+            onPress={() => { loadTasks(true) }}
+          >
+            {loaded && !oldLoaded ? "Ältere laden" : ""}
+          </Text>
         )}
         ListEmptyComponent={() => {
           if (error) {

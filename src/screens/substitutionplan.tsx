@@ -54,7 +54,7 @@ export default function SubstitutionScreen({ navigation }) {
     }
 
     useEffect(() => {
-        load_plan(false)
+        load_plan(isNextDay)
     }, []);
 
 
