@@ -1,72 +1,71 @@
 {
-  "name": "SchulHack",
-  "version": "0.0.1",
-  "private": true,
-  "homepage": "https://gitlab.com/Niwla23/schulhack",
-  "repository": {
-    "type": "git",
-    "url": "git+https://gitlab.com/niwla23/schulhack.git"
-  },
-  "bugs": {
-    "url": "https://gitlab.com/niwla23/schulhack/-/issues"
-  },
-  "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start",
-    "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "releaseAndroid": "cd android && ./gradlew assembleRelease",
-    "clean": "cd android && ./gradlew clean"
-  },
-  "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.13.2",
-    "@react-native-community/checkbox": "^0.5.7",
-    "@react-native-community/masked-view": "^0.1.10",
-    "@react-navigation/bottom-tabs": "^5.11.7",
-    "@react-navigation/native": "^5.8.10",
-    "@react-navigation/stack": "^5.14.2",
-    "axios": "^0.21.1",
-    "dayjs": "^1.10.4",
-    "lodash": "^4.17.20",
-    "react": "16.13.1",
-    "react-native": "0.63.4",
-    "react-native-appearance": "^0.3.4",
-    "react-native-bootsplash": "^3.1.2",
-    "react-native-cheerio": "^1.0.0-rc.4",
-    "react-native-gesture-handler": "^1.9.0",
-    "react-native-keychain": "^6.2.0",
-    "react-native-reanimated": "^1.13.2",
-    "react-native-render-html": "^5.0.1",
-    "react-native-restart": "^0.0.20",
-    "react-native-safe-area-context": "^3.1.9",
-    "react-native-screens": "^2.16.1",
-    "react-native-vector-icons": "^7.1.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/runtime": "^7.8.4",
-    "@react-native-community/eslint-config": "^1.1.0",
-    "@types/jest": "^25.2.3",
-    "@types/react-native": "^0.63.2",
-    "@types/react-test-renderer": "^16.9.2",
-    "babel-jest": "^25.1.0",
-    "eslint": "^6.5.1",
-    "jest": "^25.1.0",
-    "metro-react-native-babel-preset": "^0.59.0",
-    "npm-license-crawler": "^0.2.1",
-    "react-test-renderer": "16.13.1",
-    "typescript": "^3.8.3"
-  },
-  "jest": {
-    "preset": "react-native",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
-  }
+    "name": "SchulHack",
+    "version": "0.0.1",
+    "private": true,
+    "homepage": "https://gitlab.com/Niwla23/schulhack",
+    "repository": {
+        "type": "git",
+        "url": "git+https://gitlab.com/niwla23/schulhack.git"
+    },
+    "bugs": {
+        "url": "https://gitlab.com/niwla23/schulhack/-/issues"
+    },
+    "scripts": {
+        "android": "react-native run-android",
+        "ios": "react-native run-ios",
+        "start": "react-native start",
+        "test": "jest",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "releaseAndroid": "cd android && ./gradlew assembleRelease",
+        "clean": "cd android && ./gradlew clean"
+    },
+    "dependencies": {
+        "@react-native-async-storage/async-storage": "^1.13.2",
+        "@react-native-community/checkbox": "^0.5.7",
+        "@react-native-community/masked-view": "^0.1.10",
+        "@react-navigation/bottom-tabs": "^5.11.7",
+        "@react-navigation/native": "^5.8.10",
+        "@react-navigation/stack": "^5.14.2",
+        "axios": "^0.21.1",
+        "dayjs": "^1.10.4",
+        "lodash": "^4.17.20",
+        "react": "16.13.1",
+        "react-native": "0.63.4",
+        "react-native-appearance": "^0.3.4",
+        "react-native-bootsplash": "^3.1.2",
+        "react-native-cheerio": "^1.0.0-rc.4",
+        "react-native-gesture-handler": "^1.9.0",
+        "react-native-keychain": "^6.2.0",
+        "react-native-render-html": "^5.0.1",
+        "react-native-restart": "^0.0.20",
+        "react-native-safe-area-context": "^3.1.9",
+        "react-native-screens": "^2.16.1",
+        "react-native-vector-icons": "^7.1.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.8.4",
+        "@babel/runtime": "^7.8.4",
+        "@react-native-community/eslint-config": "^1.1.0",
+        "@types/jest": "^25.2.3",
+        "@types/react-native": "^0.63.2",
+        "@types/react-test-renderer": "^16.9.2",
+        "babel-jest": "^25.1.0",
+        "eslint": "^6.5.1",
+        "jest": "^25.1.0",
+        "metro-react-native-babel-preset": "^0.59.0",
+        "npm-license-crawler": "^0.2.1",
+        "react-test-renderer": "16.13.1",
+        "typescript": "^3.8.3"
+    },
+    "jest": {
+        "preset": "react-native",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "jsx",
+            "json",
+            "node"
+        ]
+    }
 }

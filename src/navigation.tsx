@@ -11,6 +11,8 @@ import { useTheme } from './theme/themeprovider';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import SubstitutionScreen from "./screens/substitutionplan"
+import TimetableScreen from "./screens/timetable"
+import EditTimetableScreen from "./screens/editTimetable"
 import TasksScreen from "./screens/tasks"
 import TaskDetailsScreen from "./screens/taskdetails"
 import BirthdaysScreen from "./screens/birthdays"
@@ -26,6 +28,7 @@ const Stack = createStackNavigator();
 const SubstitutionPlanStack = createStackNavigator();
 const TaskStack = createStackNavigator();
 const BirthdaysStack = createStackNavigator();
+const TimetableStack = createStackNavigator();
 const SettingsStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +54,8 @@ const TasksNavigation: React.FC<Props> = (props) => {
         <TaskStack.Navigator
             headerMode="screen"
             headerTintColor="#fff"
+
+
         >
             <TaskStack.Screen name="Tasks" options={{ title: 'Aufgaben' }} component={TasksScreen} />
             <TaskStack.Screen name="TaskDetails" options={{ title: 'Aufgabendetails' }} component={TaskDetailsScreen} />
@@ -71,6 +76,27 @@ const BirthdaysNavigation: React.FC<Props> = (props) => {
             />
 
         </BirthdaysStack.Navigator>
+    )
+}
+
+const TimetableNavigation: React.FC<Props> = (props) => {
+    return (
+        <TimetableStack.Navigator
+            headerMode="screen"
+        >
+            <TimetableStack.Screen
+                name="Main"
+                options={{ title: 'Stundenplan' }}
+                component={TimetableScreen}
+            />
+            <TimetableStack.Screen
+                name="Edit"
+                options={{ title: 'Bearbeiten' }}
+                component={EditTimetableScreen}
+            />
+
+
+        </TimetableStack.Navigator>
     )
 }
 
@@ -113,7 +139,7 @@ const AppNavigation: React.FC<Props> = (props) => {
         return (
             <View style={{
                 flexDirection: 'row',
-                backgroundColor: colors.background,
+                backgroundColor: colors.background2,
                 justifyContent: "space-around",
                 alignItems: "center",
                 alignContent: "center",
@@ -153,29 +179,67 @@ const AppNavigation: React.FC<Props> = (props) => {
                         iconName = "tasks";
                     } else if (route.name === 'Birthdays') {
                         iconName = "birthday-cake";
+                    } else if (route.name === 'Timetable') {
+                        iconName = "calendar-week";
                     } else if (route.name === 'Settings') {
                         iconName = "cog";
                     }
 
-                    return (
-                        <TouchableOpacity
-                            key={index}
-                            accessibilityRole="button"
-                            accessibilityState={isFocused ? { selected: true } : {}}
-                            accessibilityLabel={options.tabBarAccessibilityLabel}
-                            testID={options.tabBarTestID}
-                            onPress={onPress}
-                            onLongPress={onLongPress}
-                            style={{
-                                flex: 1,
-                                backgroundColor: isFocused ? colors.primary : colors.background,
-                                borderRadius: 8,
-                                margin: 5
-                            }}
-                        >
-                            <FontAwesome5 name={iconName} style={styles.icon}></FontAwesome5>
-                        </TouchableOpacity>
-                    );
+                    if (index === 2) {
+
+                        return (
+                            <>
+                            
+                            <TouchableOpacity
+                                key={index}
+                                accessibilityRole="button"
+                                accessibilityState={isFocused ? { selected: true } : {}}
+                                accessibilityLabel={options.tabBarAccessibilityLabel}
+                                testID={options.tabBarTestID}
+                                onPress={onPress}
+                                onLongPress={onLongPress}
+                                style={{
+                                    // flex: 1,
+                                    backgroundColor: isFocused ? colors.primary : colors.secondary,
+                                    bottom: 0,
+                                    borderRadius: 160,
+                                    // width: 2,
+                                    padding: 4,
+                                    margin: 10,
+                                    marginRight: 30,
+                                    marginLeft: 30,
+                                    transform: [{ scale: 2.3 }, {translateY: -7}],
+                                    borderColor: colors.background2,
+                                    borderWidth: 3
+                                }}
+                            >
+                                <FontAwesome5 name={iconName} style={[styles.icon, {margin: 0}]}></FontAwesome5>
+                            </TouchableOpacity>
+                            </>
+                        );
+                    } else {
+
+                        return (
+                            <TouchableOpacity
+                                key={index}
+                                accessibilityRole="button"
+                                accessibilityState={isFocused ? { selected: true } : {}}
+                                accessibilityLabel={options.tabBarAccessibilityLabel}
+                                testID={options.tabBarTestID}
+                                onPress={onPress}
+                                onLongPress={onLongPress}
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: isFocused ? colors.primary : colors.background,
+                                    borderRadius: 16,
+                                    margin: 5
+                                }}
+                            >
+                                <FontAwesome5 name={iconName} style={styles.icon}></FontAwesome5>
+                            </TouchableOpacity>
+                        );
+                    }
+
                 })}
             </View>
         );
@@ -183,6 +247,7 @@ const AppNavigation: React.FC<Props> = (props) => {
 
     return (
         <Tab.Navigator
+            initialRouteName="SubstitutionPlan"
             tabBar={props => <CustomTabBar {...props} />}
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
@@ -209,8 +274,10 @@ const AppNavigation: React.FC<Props> = (props) => {
 
             }}
         >
-            <Tab.Screen name="SubstitutionPlan" component={SubstitutionPlanNavigation} />
+
+            <Tab.Screen name="Timetable" component={TimetableNavigation} />
             <Tab.Screen name="Tasks" options={{ tabBarBadge: 3 }} component={TasksNavigation} />
+            <Tab.Screen name="SubstitutionPlan" component={SubstitutionPlanNavigation} />
             <Tab.Screen name="Birthdays" component={BirthdaysNavigation} />
             <Tab.Screen name="Settings" component={SettingsNavigation} />
         </Tab.Navigator >
@@ -251,7 +318,7 @@ export const Navigation: React.FC<Props> = (props) => {
         colors: {
             primary: colors.primary,
             background: colors.background,
-            card: colors.background3,
+            card: colors.background2,
             text: colors.text,
             border: colors.background,
             notification: colors.secondary,

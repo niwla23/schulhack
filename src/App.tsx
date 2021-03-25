@@ -3,6 +3,7 @@ import { AppearanceProvider } from 'react-native-appearance';
 import { ThemeProvider } from './theme/themeprovider';
 import { Navigation } from './navigation'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNBootSplash from "react-native-bootsplash";
 
 
 const App = () => {
