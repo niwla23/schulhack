@@ -1,0 +1,4 @@
+ - Stundenplan Funktion
+ - Neue navigation
+ - richtige farben für pull to refresh
+ - Standardtheme grün dunkel

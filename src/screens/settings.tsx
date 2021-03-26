@@ -52,10 +52,10 @@ export default function SettingsScreen({ navigation }) {
                     afterSelect={(_value: String) => RNRestart.Restart()}
                     options={
                         {
-                            "dark": "Dunkel (Orange)",
+                            "darkOrange": "Dunkel (Orange)",
                             "darkPink": "Dunkel (Pink)",
                             "darkGreen": "Dunkel (Grün)",
-                            "light": "Hell"
+                            "light": "Hell (Grün)"
                         }
                     }
                 />

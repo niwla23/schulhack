@@ -83,12 +83,6 @@
         "licenseUrl": "https://github.com/oblador/react-native-keychain/raw/master/LICENSE",
         "parents": "SchulHack"
     },
-    "react-native-reanimated@1.13.2": {
-        "licenses": "MIT",
-        "repository": "https://github.com/software-mansion/react-native-reanimated",
-        "licenseUrl": "https://github.com/software-mansion/react-native-reanimated/raw/master/LICENSE",
-        "parents": "SchulHack"
-    },
     "react-native-render-html@5.0.1": {
         "licenses": "BSD-2-Clause",
         "repository": "https://github.com/archriss/react-native-render-html",

@@ -34,11 +34,11 @@ export const TimetableItem = ({ item }) => {
         itemTitle: {
             fontSize: 20,
             fontWeight: '600',
-            color: "#fff",
+            color: colors.text,
         },
         itemContent: {
             fontSize: 16,
-            color: "#fff",
+            color: colors.text2,
         },
         editPressable: {
             justifyContent: "center",
@@ -96,15 +96,14 @@ export default function TimetableScreen({ navigation }) {
 
     const [timetable, setTimetable] = useState([]);
     const [currentDay, setCurrentDay] = useState(new Date().getDay() < 5 ? new Date().getDay() : 0)
-    const [timetableExists, setTimetableExists] = useState(false)
-    const [loaded, setLoaded] = useState(false)
+    const [timetableExists, setTimetableExists] = useState(true)
 
-    const createTimetable = () => {
+    const createTimetable = async () => {
         var i = 0
         while (i < 5) {
             var j = 0
             while (j < 3) {
-                AsyncStorage.setItem(`timetable.${i}.${j}`, JSON.stringify(
+                let _ = await AsyncStorage.setItem(`timetable.${i}.${j}`, JSON.stringify(
                     {
                         "teacher": null,
                         "subject": null,
@@ -118,7 +117,7 @@ export default function TimetableScreen({ navigation }) {
             }
             i++
         }
-        loadTimetable()
+        await loadTimetable()
         AsyncStorage.setItem("timetable.exists", "true")
     }
 
@@ -130,13 +129,15 @@ export default function TimetableScreen({ navigation }) {
             let d = table2[table2.push([]) - 1]
             var j = 0
             while (j < 3) {
-                d.push(JSON.parse(await AsyncStorage.getItem(`timetable.${i}.${j}`)))
+                let raw: string | null = await AsyncStorage.getItem(`timetable.${i}.${j}`)
+                if (raw) {
+                    d.push(JSON.parse(raw))
+                }
                 j++
             }
             i++
         }
         setTimetable(table2)
-        setLoaded(true)
     }
 
     useEffect(() => {
@@ -147,7 +148,6 @@ export default function TimetableScreen({ navigation }) {
     }, []);
 
     useEffect(() => {
-        // loadTimetable()
         const unsubscribe = navigation.addListener(
             'focus',
             loadTimetable
@@ -166,6 +166,7 @@ export default function TimetableScreen({ navigation }) {
         dayTabContainer: ViewStyle;
         dayTabText: TextStyle;
         noPlanText: TextStyle;
+        noPlanContainer: ViewStyle;
 
     }
     const styles = StyleSheet.create<Style>({
@@ -199,7 +200,16 @@ export default function TimetableScreen({ navigation }) {
             color: colors.text
         },
         noPlanText: {
-            color: colors.text
+            color: colors.text,
+            marginBottom: 8,
+            textAlign: "center"
+        },
+        noPlanContainer: {
+            padding: 8,
+            marginLeft: 32,
+            marginRight: 32,
+            justifyContent: "center",
+            height: "100%"
         }
     })
 
@@ -240,8 +250,8 @@ export default function TimetableScreen({ navigation }) {
             }
             {!timetableExists &&
 
-                <View>
-                    <Text style={styles.noPlanText}>Du hast bisher keinen Stundenplan erstellt</Text>
+                <View style={styles.noPlanContainer}>
+                    <Text style={styles.noPlanText}>Du hast bisher keinen Stundenplan erstellt. Nachdem du deinen Stundenplan erstellt hast, kannst du ihn bearbeiten.</Text>
                     <Button
                         title="Stundenplan erstellen"
                         color={colors.primary}

@@ -1,0 +1,4 @@
+ - Timetable feature
+ - new navigation
+ - correct colors for pull to refresh
+ - defaultheme: dark green

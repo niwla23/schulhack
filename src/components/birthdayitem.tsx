@@ -24,12 +24,12 @@ export const BirthdayItem = (props) => {
         itemTitle: {
             fontSize: 20,
             fontWeight: '600',
-            color: "#fff",
+            color: colors.text,
         },
         itemContent: {
             fontSize: 16,
             fontWeight: '600',
-            color: "#fff",
+            color: colors.text,
         },
     });
 

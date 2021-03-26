@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ViewStyle, FlatList, TextStyle } from 'react-native';
+import { View, StyleSheet, ViewStyle, FlatList, TextStyle, RefreshControl } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import { BirthdayItem } from '../components/birthdayitem'
 import { IservWrapper } from '../iservscrapping';
@@ -86,8 +86,13 @@ export default function BirthdaysScreen({ navigation }) {
         <View style={styles.background}>
             <FlatList
                 data={birthdays}
-                refreshing={!loaded}
-                onRefresh={loadBirthdays}
+                refreshControl={
+                    <RefreshControl
+                        colors={[colors.primary]}
+                        progressBackgroundColor={colors.background2}
+                        refreshing={!loaded}
+                        onRefresh={loadBirthdays}
+                    />}
                 renderItem={renderItem}
                 keyExtractor={item => item.name}
                 ListFooterComponent={()=>{return(<View style={{height: 20}} />)}}

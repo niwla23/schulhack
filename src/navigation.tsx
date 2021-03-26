@@ -188,10 +188,10 @@ const AppNavigation: React.FC<Props> = (props) => {
                     if (index === 2) {
 
                         return (
-                            <>
+                            
                             
                             <TouchableOpacity
-                                key={index}
+                                key={index + "center"}
                                 accessibilityRole="button"
                                 accessibilityState={isFocused ? { selected: true } : {}}
                                 accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -200,22 +200,22 @@ const AppNavigation: React.FC<Props> = (props) => {
                                 onLongPress={onLongPress}
                                 style={{
                                     // flex: 1,
-                                    backgroundColor: isFocused ? colors.primary : colors.secondary,
+                                    backgroundColor: colors.primary,
                                     bottom: 0,
                                     borderRadius: 160,
                                     // width: 2,
                                     padding: 4,
                                     margin: 10,
-                                    marginRight: 30,
-                                    marginLeft: 30,
-                                    transform: [{ scale: 2.3 }, {translateY: -7}],
+                                    marginRight: 25,
+                                    marginLeft: 25,
+                                    transform: [{ scale: 2.1 }, {translateY: -6}],
                                     borderColor: colors.background2,
                                     borderWidth: 3
                                 }}
                             >
                                 <FontAwesome5 name={iconName} style={[styles.icon, {margin: 0}]}></FontAwesome5>
                             </TouchableOpacity>
-                            </>
+                            
                         );
                     } else {
 
@@ -230,7 +230,7 @@ const AppNavigation: React.FC<Props> = (props) => {
                                 onLongPress={onLongPress}
                                 style={{
                                     flex: 1,
-                                    backgroundColor: isFocused ? colors.primary : colors.background,
+                                    backgroundColor: isFocused ? colors.secondary : (isDark ? colors.background: colors.background2),
                                     borderRadius: 16,
                                     margin: 5
                                 }}
@@ -326,7 +326,7 @@ export const Navigation: React.FC<Props> = (props) => {
     };
     return (
         <NavigationContainer theme={Theme}>
-            <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={colors.background}></StatusBar>
+            
             <Stack.Navigator headerMode="none">
                 {stackContent}
 

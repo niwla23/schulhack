@@ -1,7 +1,7 @@
 "use strict"
 
 import React, { useEffect, useState } from 'react';
-import { Button, Text, View, StyleSheet, ViewStyle, SectionList, TextStyle, Alert } from 'react-native';
+import { Button, Text, View, StyleSheet, ViewStyle, SectionList, TextStyle, Alert, RefreshControl } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import TaskItem from '../components/taskitem';
 import { IservWrapper } from '../iservscrapping';
@@ -61,7 +61,7 @@ export default function TasksScreen({ navigation }) {
     },
     loadMoreText: {
       color: colors.text,
-      paddingBottom: 16,
+      paddingBottom: 32,
       paddingTop: 8,
       textAlign: "center",
       textDecorationLine: "underline"
@@ -102,8 +102,13 @@ export default function TasksScreen({ navigation }) {
     <View style={styles.background}>
       <SectionList
         contentInset={{ top: 30 }}
-        onRefresh={() => { loadTasks() }}
-        refreshing={!loaded}
+        refreshControl={
+          <RefreshControl
+              colors={[colors.primary]}
+              progressBackgroundColor={colors.background2}
+              refreshing={!loaded}
+              onRefresh={loadTasks}
+          />}
         sections={tasks}
         style={styles.contentScroll}
         keyExtractor={(item, index) => item + index}

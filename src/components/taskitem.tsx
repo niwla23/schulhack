@@ -40,14 +40,14 @@ export const TaskItem = (props) => {
         itemTitle: {
             fontSize: 20,
             fontWeight: '600',
-            color: "#fff",
+            color: colors.text,
         },
         itemContent: {
             marginTop: 8,
 
             fontSize: 18,
             fontWeight: '400',
-            color: "#fff",
+            color: colors.text,
         },
         detailsContainer: {
             alignSelf: "flex-end",
@@ -56,7 +56,7 @@ export const TaskItem = (props) => {
         },
         detailsText: {
             textAlign: "right",
-            color: "#fff",
+            color: colors.text,
             fontSize: 18
         },
         detailsIcon: {

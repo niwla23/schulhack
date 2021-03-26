@@ -1,12 +1,10 @@
 "use strict"
 
 import React, { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, Switch, View, StyleSheet, ViewStyle, TextStyle, SectionList, Button } from 'react-native';
+import { Text, Switch, View, StyleSheet, ViewStyle, TextStyle, SectionList, Button, RefreshControl } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import { PlanItem } from '../components/planitem';
 import { ListError } from '../components/listError'
-import { Header } from '../components/header'
 import { IservWrapper } from '../iservscrapping/iservWrapper';
 
 
@@ -115,7 +113,7 @@ export default function SubstitutionScreen({ navigation }) {
         listHeader: {
             color: colors.text,
             marginLeft: 16
-            
+
         },
         noItems: {
 
@@ -150,8 +148,13 @@ export default function SubstitutionScreen({ navigation }) {
 
             <SectionList
                 sections={data.plan}
-                refreshing={!loaded}
-                onRefresh={refresh}
+                refreshControl={
+                    <RefreshControl
+                        colors={[colors.primary]}
+                        progressBackgroundColor={colors.background2}
+                        refreshing={!loaded}
+                        onRefresh={refresh}
+                    />}
                 ListHeaderComponent={() => {
                     if (loaded) {
                         return (
@@ -162,7 +165,7 @@ export default function SubstitutionScreen({ navigation }) {
                     }
 
                 }}
-                ListFooterComponent={() => { return (<View style={{ height: 20 }} />) }}
+                ListFooterComponent={() => { return (<View style={{ height: 40 }} />) }}
                 style={{ padding: 8 }}
                 keyExtractor={(item, index) => item + index}
                 renderItem={({ item }) => <PlanItem content={item} />}

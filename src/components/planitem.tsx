@@ -34,14 +34,14 @@ export const PlanItem = (props) => {
         itemTitle: {
             fontSize: 24,
             fontWeight: '600',
-            color: "#fff",
+            color: colors.text,
         },
         itemContent: {
             marginTop: 8,
             padding: 8,
             fontSize: 18,
             fontWeight: '400',
-            color: "#fff",
+            color: colors.text,
         },
     });
 
