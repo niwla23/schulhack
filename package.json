@@ -16,7 +16,7 @@
         "start": "react-native start",
         "test": "jest",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-        "releaseAndroid:standalone": "UPDATE_SERVER_BASE_URL=https://schulhack.gitlab.io/update-server ENABLE_AUTO_UPDATE=true cd android && ./gradlew assembleRelease",
+        "releaseAndroid:standalone": "cd android && UPDATE_SERVER_BASE_URL=https://schulhack.gitlab.io/update-server ENABLE_AUTO_UPDATE=true ./gradlew assembleRelease",
         "releaseAndroid:fdroid": "cd android && ./gradlew assembleRelease",
         "clean": "cd android && ./gradlew clean"
     },
