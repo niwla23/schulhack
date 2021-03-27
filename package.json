@@ -16,7 +16,8 @@
         "start": "react-native start",
         "test": "jest",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-        "releaseAndroid": "cd android && ./gradlew assembleRelease",
+        "releaseAndroid:standalone": "UPDATE_SERVER_BASE_URL=https://schulhack.gitlab.io/update-server ENABLE_AUTO_UPDATE=true cd android && ./gradlew assembleRelease",
+        "releaseAndroid:fdroid": "cd android && ./gradlew assembleRelease",
         "clean": "cd android && ./gradlew clean"
     },
     "dependencies": {
@@ -27,6 +28,7 @@
         "@react-navigation/native": "^5.8.10",
         "@react-navigation/stack": "^5.14.2",
         "axios": "^0.21.1",
+        "babel-plugin-transform-inline-environment-variables": "^0.4.3",
         "dayjs": "^1.10.4",
         "lodash": "^4.17.20",
         "react": "16.13.1",
@@ -34,6 +36,7 @@
         "react-native-appearance": "^0.3.4",
         "react-native-bootsplash": "^3.1.2",
         "react-native-cheerio": "^1.0.0-rc.4",
+        "react-native-device-info": "^8.0.7",
         "react-native-gesture-handler": "^1.9.0",
         "react-native-keychain": "^6.2.0",
         "react-native-render-html": "^5.0.1",
