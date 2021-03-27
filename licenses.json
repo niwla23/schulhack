@@ -41,6 +41,12 @@
         "licenseUrl": "https://github.com/axios/axios/raw/master/LICENSE",
         "parents": "SchulHack"
     },
+    "babel-plugin-transform-inline-environment-variables@0.4.3": {
+        "licenses": "MIT",
+        "repository": "https://github.com/babel/minify/tree/master/packages/babel-plugin-transform-inline-environment-variables",
+        "licenseUrl": "https://github.com/babel/minify/tree/master/packages/babel-plugin-transform-inline-environment-variables",
+        "parents": "SchulHack"
+    },
     "dayjs@1.10.4": {
         "licenses": "MIT",
         "repository": "https://github.com/iamkun/dayjs",
@@ -69,6 +75,12 @@
         "licenses": "MIT",
         "repository": "https://github.com/leon-4A6C/react-native-cheerio",
         "licenseUrl": "https://github.com/leon-4A6C/react-native-cheerio/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
+    "react-native-device-info@8.0.7": {
+        "licenses": "MIT",
+        "repository": "https://github.com/react-native-device-info/react-native-device-info",
+        "licenseUrl": "https://github.com/react-native-device-info/react-native-device-info/raw/master/LICENSE",
         "parents": "SchulHack"
     },
     "react-native-gesture-handler@1.9.0": {

@@ -72,7 +72,11 @@ export default function InfoScreen({ navigation }) {
                     Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. Es gelten die Nutzungsbedingungen deiner Schule.
                 </Text>
                 <Text style={styles.subHeader}>Datenschutz</Text>
-                <Text style={styles.text}>Diese App sendet keine Daten an andere Server als der, der in den Einstellungen angegeben wurde. An diesen werden beim ersten Start zwei Anfragen gestellt.{"\n"}Die erste dient dem Login. Der angegebene Server sollte mit den Cookies, die für folgende Anfragen verwendet werden können, antworten.{"\n"}Sobald der Server geantwortet hat, wird eine zweite Anfrage gestellt um den Vertretungsplan abzurufen.{"\n"}Das Passwort wird in einer sicheren, sogenannten Keychain gespeichert.{"\n"}Es werden keine Analyse Tools eingesetzt.{"\n"}</Text>
+                <Text style={styles.text}>Diese App sendet keine Daten an andere Server als den, der in den Einstellungen angegeben wurde und den Update Server.
+                Der Update Server wird auf gitlab.com gehostet. Für weitere Informationen sieh dir die Datenschutzerklärung von GitLab.com an.{"\n"}
+                {"\n"}
+                Das Iserv-Passwort wird in einer sicheren, sogenannten Keychain gespeichert.{"\n"}
+                Es werden keine Analyse Tools eingesetzt.{"\n"}</Text>
                 <Text style={styles.subHeader}>Open Source</Text>
                 <Text style={styles.text}>Folgende Bibliotheken und Ressourcen sind in dieser App enthalten:</Text>
                 {Object.keys(licenses).map((dependency, i) =>
