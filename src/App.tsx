@@ -29,7 +29,7 @@ const App = () => {
       console.log("checking for updates")
       console.log(Number(DeviceInfo.getBuildNumber()))
       const abi = DeviceInfo.supportedAbisSync()[0]
-      axios.get(`${process.env["UPDATE_SERVER_BASE_URL"]}/versions.json`).then(r => {
+      axios.get(`${process.env["UPDATE_SERVER_BASE_URL"]}/versions.json?cb=${new Date().getTime()}`).then(r => {
 
 
         const versionData = r.data[abi]
@@ -39,7 +39,7 @@ const App = () => {
         console.log(versionData.url)
         setUpdateUrl(versionData.url)
 
-        axios.get(`${process.env["UPDATE_SERVER_BASE_URL"]}/release_notes.json`).then(b => {
+        axios.get(`${process.env["UPDATE_SERVER_BASE_URL"]}/release_notes.json?cb=${new Date().getTime()}`).then(b => {
           setReleaseNotes(b.data[String(versionData.simpleVersionCode)].de)
         })
       })
