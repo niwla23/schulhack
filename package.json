@@ -11,7 +11,7 @@
         "url": "https://gitlab.com/niwla23/schulhack/-/issues"
     },
     "scripts": {
-        "android": "react-native run-android",
+        "android": "UPDATE_SERVER_BASE_URL=http://192.168.178.82:8888 ENABLE_AUTO_UPDATE=true react-native run-android",
         "ios": "react-native run-ios",
         "start": "react-native start",
         "test": "jest",

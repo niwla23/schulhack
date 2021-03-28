@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UpdateOverlay } from './components/updateOverlay'
 import axios from "axios"
 import { Linking } from 'react-native';
+import getSimpleVersionCode from './helpers/getSimpleVersionCode'
 
 
 const App = () => {
@@ -23,24 +24,37 @@ const App = () => {
         setTheme(read_value)
       }
     })
-    console.log(`foo is equal to ${process.env["FOO"]}`);
 
     if (Boolean(process.env["ENABLE_AUTO_UPDATE"])) {
       console.log("checking for updates")
-      console.log(Number(DeviceInfo.getBuildNumber()))
+      const currentVersionCode = Number(DeviceInfo.getBuildNumber())
       const abi = DeviceInfo.supportedAbisSync()[0]
       axios.get(`${process.env["UPDATE_SERVER_BASE_URL"]}/versions.json?cb=${new Date().getTime()}`).then(r => {
-
-
         const versionData = r.data[abi]
 
-        setShowUpdateOverlay(versionData.versionCode > DeviceInfo.getBuildNumber())
+        setShowUpdateOverlay(versionData.versionCode > currentVersionCode)
         setNewVersionName(versionData.versionName)
-        console.log(versionData.url)
         setUpdateUrl(versionData.url)
 
         axios.get(`${process.env["UPDATE_SERVER_BASE_URL"]}/release_notes.json?cb=${new Date().getTime()}`).then(b => {
-          setReleaseNotes(b.data[String(versionData.simpleVersionCode)].de)
+          const missedVersions = []
+          for (var i = currentVersionCode; i <= versionData.versionCode; i++) {
+            missedVersions.push(i);
+          }
+          if (missedVersions.length > 1) {
+            missedVersions.shift()
+          }
+
+          const localReleaseNotes: Array<string> = []
+          missedVersions.forEach((element) => {
+            const simpleVersionCode = getSimpleVersionCode(element, abi)
+            b.data[String(simpleVersionCode)].de.forEach(line => {
+              localReleaseNotes.push(line)
+            });
+          })
+
+          // setReleaseNotes(b.data[String(versionData.simpleVersionCode)].de)
+          setReleaseNotes(localReleaseNotes)
         })
       })
     }
@@ -48,7 +62,6 @@ const App = () => {
   }, []);
 
   const acceptUpdate = () => {
-    console.log("yay, user accepted")
     Linking.openURL(updateUrl)
   }
 
