@@ -119,6 +119,12 @@
         "licenseUrl": "https://github.com/kmagiera/react-native-screens/raw/master/LICENSE",
         "parents": "SchulHack"
     },
+    "react-native-simple-download-manager@1.4.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/master-atul/react-native-download-manager",
+        "licenseUrl": "https://github.com/master-atul/react-native-download-manager/raw/master/LICENSE",
+        "parents": "SchulHack"
+    },
     "react-native-vector-icons@7.1.0": {
         "licenses": "MIT",
         "repository": "https://github.com/oblador/react-native-vector-icons",

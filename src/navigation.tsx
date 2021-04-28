@@ -145,6 +145,7 @@ const AppNavigation: React.FC<Props> = (props) => {
                 alignContent: "center",
                 alignSelf: "center",
                 width: "100%",
+                padding: 8
 
             }}>
                 {state.routes.map((route, index) => {
@@ -188,8 +189,8 @@ const AppNavigation: React.FC<Props> = (props) => {
                     if (index === 2) {
 
                         return (
-                            
-                            
+
+
                             <TouchableOpacity
                                 key={index + "center"}
                                 accessibilityRole="button"
@@ -208,14 +209,14 @@ const AppNavigation: React.FC<Props> = (props) => {
                                     margin: 10,
                                     marginRight: 25,
                                     marginLeft: 25,
-                                    transform: [{ scale: 2.1 }, {translateY: -6}],
+                                    transform: [{ scale: 2.1 }, { translateY: -6 }],
                                     borderColor: colors.background2,
                                     borderWidth: 3
                                 }}
                             >
-                                <FontAwesome5 name={iconName} style={[styles.icon, {margin: 0}]}></FontAwesome5>
+                                <FontAwesome5 name={iconName} style={[styles.icon, { margin: 0 }]}></FontAwesome5>
                             </TouchableOpacity>
-                            
+
                         );
                     } else {
 
@@ -230,9 +231,9 @@ const AppNavigation: React.FC<Props> = (props) => {
                                 onLongPress={onLongPress}
                                 style={{
                                     flex: 1,
-                                    backgroundColor: isFocused ? colors.secondary : (isDark ? colors.background: colors.background2),
+                                    backgroundColor: isFocused ? colors.secondary : (isDark ? colors.background : colors.background2),
                                     borderRadius: 16,
-                                    margin: 5
+                                    margin: 5,
                                 }}
                             >
                                 <FontAwesome5 name={iconName} style={styles.icon}></FontAwesome5>
@@ -326,7 +327,7 @@ export const Navigation: React.FC<Props> = (props) => {
     };
     return (
         <NavigationContainer theme={Theme}>
-            
+
             <Stack.Navigator headerMode="none">
                 {stackContent}
 

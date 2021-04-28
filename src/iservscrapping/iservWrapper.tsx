@@ -5,8 +5,10 @@ import dayjs from "dayjs"
 import relativeTIme from "dayjs/plugin/relativeTime"
 import { relativeTime } from "dayjs/locale/*";
 import { Task } from "./types";
+import RNFetchBlob from "rn-fetch-blob"
 var _ = require('lodash');
 require('dayjs/locale/de')
+
 
 
 dayjs.extend(relativeTIme)
@@ -64,6 +66,32 @@ export class IservWrapper {
 
         }
 
+    }
+
+    async downloadFile(path: string, title: string) {
+        await this.loadCookieOrLogin()
+        const fileUrl = this.iserv?.url + path;
+        const headers = this.iserv?.getHeaders();
+        const config = {
+            downloadTitle: title,
+            downloadDescription:
+                "Heruntergeladen von SchulHack",
+            saveAsName: title,
+            allowedInRoaming: true,
+            allowedInMetered: true,
+            showInDownloads: true,
+        };
+        let dirs = RNFetchBlob.fs.dirs
+        RNFetchBlob
+            .config({
+                path: dirs.DownloadDir + '/' + title,
+                addAndroidDownloads: {
+                    useDownloadManager : true,
+                    notification: true,
+                    description: "Datei heruntergeladen von SchulHack"
+                }
+            })
+            .fetch('GET', fileUrl, headers)
     }
 
     async getSubstitutionPlan(isNextDay) {

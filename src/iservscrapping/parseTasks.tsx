@@ -99,27 +99,24 @@ export function parseTaskDetails(input: String, baseUrl: String): Object {
     task.description = $($(".text-break-word")[0]).html().trim()
 
     // get task type
-    if ($("#confirmation").length > 0) {
-        task.type = "confirmation"
-        // do nothing since we already now if it is done
-    } else if ($(".file-universal-upload-button").length > 0) {
+    if ($(".file-universal-upload-button").length > 0) {
         task.type = "upload"
-        // TODO
-    } else {
+    } else if ($('form[name="submission"]').length > 0) {
         task.type = "text"
-        // TODO
+    } else {
+        task.type = "confirmation"
     }
 
     // get provided files
     task.providedFiles = []
 
-    $($(".table-condensed > tbody")[0]).children().each(function (_index: Number, file) {
+    $($('form[name="iserv_exercise_attachment"] > table > tbody')[0]).children().each(function (_index: Number, file) {
         file = $(file)
 
         var parsedFile: IservFile = {}
         parsedFile.name = $(file.children()[1]).text().trim() // Title
         parsedFile.size = $(file.children()[2]).text() // Size
-        parsedFile.url = baseUrl + $($($(file.children()[1]).children()[0])[0]).attr("href") // URL
+        parsedFile.url = $($($(file.children()[1]).children()[0])[0]).attr("href") // URL
 
         parsedFile.type = "file"
         task.providedFiles?.push(parsedFile)
@@ -128,25 +125,25 @@ export function parseTaskDetails(input: String, baseUrl: String): Object {
     if (task.type === "upload") {
         task.uploadedFiles = []
         const tableIndex = task.providedFiles.length > 0 ? 1 : 0
-        $($(".table-condensed > tbody")[tableIndex]).children().each(function (_index, file) {
+        $($('form[name="iserv_exercise_element"] > table > tbody')[0]).children().each(function (_index, file) {
             file = $(file)
 
             var parsedFile: IservFile = {}
             parsedFile.name = $(file.children()[1]).text().trim() // Title
-            parsedFile.url = baseUrl + $($(file.children()[1]).children()[0]).attr("href")// URL
+            parsedFile.url = $($(file.children()[1]).children()[0]).attr("href")// URL
             parsedFile.size = $(file.children()[2]).text().trim() // Size
             parsedFile.type = "file"
             task.uploadedFiles?.push(parsedFile)
         })
         try {
-            task.feedbackText = $(".col-md-12 > .panel > .panel-body").html().trim()
+            task.feedbackText = $(".table-fixed-width > tbody > tr div.text-break-word").html().trim()
         } catch {
             task.feedbackText = undefined
         }
     } else if (task.type === "text") {
-        task.uploadedText = $(".col-md-12 > .panel > .panel-body").html().replace("Bearbeiten", "").trim()
+        task.uploadedText = $("#submission_text").text().trim()
         try {
-            task.feedbackText = $(".col-md-6 > .panel > .panel-body").html().trim()
+            task.feedbackText = $(".table-fixed-width > tbody > tr div.text-break-word").html().trim()
         } catch {
             task.feedbackText = undefined
         }

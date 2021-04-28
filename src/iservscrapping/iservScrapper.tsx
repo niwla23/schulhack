@@ -38,17 +38,21 @@ export class IservScrapper {
 
   }
 
+  getHeaders() {
+    return {
+      Cookie: this.cookies,
+      'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  }
+
   async _authenticated_request(path: String, responseType?: ResponseType, method?: Method, body?: Object) {
     return new Promise((resolve, reject) => {
       axios({
         method: method || "get",
         url: `${this.url}${path}`,
         responseType: responseType,
-        headers: {
-          Cookie: this.cookies,
-          'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
+        headers: this.getHeaders(),
         data: body
       })
         .then(function (response) {
@@ -82,7 +86,7 @@ export class IservScrapper {
     } else {
       response = await this._authenticated_request("/iserv/exercise"); // fetch only current tasks
     }
-    
+
     return parseTasksOverview(response.data)
   }
 

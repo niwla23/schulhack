@@ -11,12 +11,13 @@
         "url": "https://gitlab.com/niwla23/schulhack/-/issues"
     },
     "scripts": {
-        "android": "UPDATE_SERVER_BASE_URL=http://192.168.178.82:8888 ENABLE_AUTO_UPDATE=true react-native run-android",
+        "android": "UPDATE_SERVER_BASE_URL=http://192.168.178.82:8000 ENABLE_AUTO_UPDATE=true react-native run-android",
         "ios": "react-native run-ios",
         "start": "react-native start",
         "test": "jest",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
         "releaseAndroid:standalone": "cd android && UPDATE_SERVER_BASE_URL=https://schulhack.gitlab.io/update-server ENABLE_AUTO_UPDATE=true ./gradlew assembleRelease",
+        "releaseAndroid:testUpdates": "cd android && UPDATE_SERVER_BASE_URL=http://192.168.178.82:8000 ENABLE_AUTO_UPDATE=true ./gradlew assembleRelease",
         "releaseAndroid:fdroid": "cd android && ./gradlew assembleRelease",
         "clean": "cd android && ./gradlew clean"
     },
@@ -43,7 +44,8 @@
         "react-native-restart": "^0.0.20",
         "react-native-safe-area-context": "^3.1.9",
         "react-native-screens": "^2.16.1",
-        "react-native-vector-icons": "^7.1.0"
+        "react-native-vector-icons": "^7.1.0",
+        "rn-fetch-blob": "^0.12.0"
     },
     "devDependencies": {
         "@babel/core": "^7.8.4",

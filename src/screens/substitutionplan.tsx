@@ -1,11 +1,12 @@
 "use strict"
 
 import React, { useState, useEffect } from 'react';
-import { Text, Switch, View, StyleSheet, ViewStyle, TextStyle, SectionList, Button, RefreshControl } from 'react-native';
+import { Text, Switch, View, StyleSheet, ViewStyle, TextStyle, SectionList, RefreshControl, Pressable } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import { PlanItem } from '../components/planitem';
 import { ListError } from '../components/listError'
 import { IservWrapper } from '../iservscrapping/iservWrapper';
+import Button from '../components/button'
 
 
 export default function SubstitutionScreen({ navigation }) {
@@ -189,7 +190,10 @@ export default function SubstitutionScreen({ navigation }) {
 
                                     />
                                     <View style={{ marginBottom: 16 }}></View>
-                                    <Button onPress={() => navigation.navigate("Settings")} color={colors.primary} title="Einstellungen"></Button>
+                                    {/* <Pressable onPress={() => navigation.navigate("Settings")}>
+                                        <Text >EINSTELLUNGEN</Text>
+                                    </Pressable> */}
+                                    <Button text="EINSTELLUNGEN" onPress={() => navigation.navigate("Settings")}></Button>
                                 </View>
 
                             </>

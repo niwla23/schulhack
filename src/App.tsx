@@ -6,9 +6,8 @@ import { Navigation } from './navigation'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UpdateOverlay } from './components/updateOverlay'
 import axios from "axios"
-import { Linking } from 'react-native';
+import { Alert, Linking } from 'react-native';
 import getSimpleVersionCode from './helpers/getSimpleVersionCode'
-
 
 const App = () => {
 
@@ -24,6 +23,7 @@ const App = () => {
         setTheme(read_value)
       }
     })
+
 
     if (Boolean(process.env["ENABLE_AUTO_UPDATE"])) {
       console.log("checking for updates")
@@ -62,7 +62,10 @@ const App = () => {
   }, []);
 
   const acceptUpdate = () => {
-    Linking.openURL(updateUrl)
+    Alert.alert("Browser schließen", "Bitte schließe den Browser, bevor du das update runterlädst",[
+      {"text": "Hab ich gemacht", onPress: () => {Linking.openURL(updateUrl)}}
+    ])
+    
   }
 
 
