@@ -22,7 +22,8 @@ const Button = ({onPress, text}) => {
         background: {
             backgroundColor: colors.primary,
             padding: 8,
-            borderRadius: 8
+            borderRadius: 8,
+        
         }
     });
 

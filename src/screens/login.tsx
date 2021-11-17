@@ -1,9 +1,9 @@
 "use strict"
 
 import React, { useEffect, useState } from 'react';
-import { Button, Text, View, StyleSheet, ViewStyle, TextStyle, ToastAndroid } from 'react-native';
+import { Text, View, StyleSheet, ViewStyle, ImageStyle, TextStyle, ToastAndroid, Image, Pressable } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { acc, color } from 'react-native-reanimated';
+import Button from '../components/button'
 import { useTheme } from '../theme/themeprovider';
 import * as Keychain from 'react-native-keychain';
 import CheckBox from '@react-native-community/checkbox';
@@ -54,11 +54,13 @@ export default function LoginScreen({ navigation, route }) {
         description: TextStyle;
         checkboxContainer: ViewStyle;
         checkbox: ViewStyle;
+        logo: ImageStyle;
+        button: ViewStyle;
+        buttonText: TextStyle;
     }
     const styles = StyleSheet.create<Style>({
         background: {
             backgroundColor: colors.background,
-            flex: 1,
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
@@ -85,26 +87,43 @@ export default function LoginScreen({ navigation, route }) {
         input: {
             color: colors.text,
             width: "100%",
-            marginBottom: 5
+            marginBottom: 5,
+            backgroundColor: colors.background2,
+            borderRadius: 200,
+            padding: 10
         },
         checkboxContainer: {
             flexDirection: "row",
-            marginBottom: 20,
+            marginBottom: 2,
         },
         checkbox: {
             alignSelf: "baseline",
+        },
+        logo: {
+            position: 'absolute',
+            left: 0,
+            top: 130
+        },
+        button: {
+            backgroundColor: colors.primary,
+            borderRadius: 200,
+            padding: 10,
+        },
+        buttonText: {
+            textAlign: "center",
+            width: "100%"
         }
     })
 
     return (
         <View style={styles.background}>
+            <Image source={require('../../assets/logo.png')} style={styles.logo} resizeMode={"contain"}></Image>
             <View style={styles.wrapper}>
                 <Text style={styles.header}>SchulHack</Text>
                 <Text style={styles.description}>Um SchulHack zu nutzen musst du dich mit deinem eigenen Iserv Account anmelden.{"\n"}
                 </Text>
                 <TextInput
                     placeholderTextColor={colors.text2}
-                    underlineColorAndroid={colors.text}
                     autoCapitalize={"none"}
                     autoCompleteType={'email'}
                     autoCorrect={false}
@@ -120,7 +139,6 @@ export default function LoginScreen({ navigation, route }) {
                 />
                 <TextInput
                     placeholderTextColor={colors.text2}
-                    underlineColorAndroid={colors.text}
                     style={styles.input}
                     placeholder="Iserv Passwort"
                     autoCompleteType="password"
@@ -132,16 +150,6 @@ export default function LoginScreen({ navigation, route }) {
                         setPassword(value)
                     }}
                 />
-                {/* <View style={styles.checkboxCotainer}>
-                    <CheckBox
-                    style={styles.checkbox}
-                        tintColor="#fff"
-                        tintColors={{ true: colors.primary, false: "#fff" }}
-                        value={accepted}
-                        onValueChange={(newValue) => setAccepted(newValue)}
-                    />
-                    <Text style={styles.description}>Ich habe die Datenschutzerklärung und den Haftungsauschluss gelesen.</Text>
-                </View> */}
                 <View style={styles.checkboxContainer}>
                     <CheckBox
                         value={accepted}
@@ -153,32 +161,29 @@ export default function LoginScreen({ navigation, route }) {
                 </View>
 
                 <Button
-                    color={colors.primary}
-                    disabled={!(makeUrl(server) && user && password && accepted)}
-                    title="Login"
+                    text="LOGIN"
                     onPress={async () => {
-                        try {
-                            await AsyncStorage.setItem("@server", makeUrl(server))
-                            await AsyncStorage.setItem("@intro_shown", "true")
-                            await AsyncStorage.removeItem("@cookie")
-                            await AsyncStorage.removeItem("@cookie_expires")
-                            await Keychain.setGenericPassword(user, password)
+                        if (makeUrl(server) && user && password && accepted) {
+                            try {
+                                await AsyncStorage.setItem("@server", makeUrl(server))
+                                await AsyncStorage.setItem("@intro_shown", "true")
+                                await AsyncStorage.removeItem("@cookie")
+                                await AsyncStorage.removeItem("@cookie_expires")
+                                await Keychain.setGenericPassword(user, password)
 
-                        } catch {
-                            ToastAndroid.show("Anmeldung fehlgeschlagen", ToastAndroid.LONG)
+                            } catch {
+                                ToastAndroid.show("Anmeldung fehlgeschlagen", ToastAndroid.LONG)
+                            }
+
+                            setEmail("")
+                            setPassword(null)
+                            setUser(null)
+
+                            route.params.setIsLoggedIn(true)
+                        } else {
+                            ToastAndroid.show("Bitte fülle alle Felder aus", ToastAndroid.LONG)
                         }
 
-                        setEmail("")
-                        setPassword(null)
-                        setUser(null)
-
-                        // try {
-                        //     navigation.navigate(route.params.target)
-                        // } catch {
-                        //     navigation.navigate("App")
-                        // }
-
-                        route.params.setIsLoggedIn(true)
 
 
 

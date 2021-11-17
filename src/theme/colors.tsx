@@ -13,7 +13,7 @@ export const lightGreenColors = {
 };
 
 export const darkColors = {
-    background: '#000',
+    background: '#0d0d0d',
     background2: '#121212',
     background3: '#181820',
     primary: '#f37121',

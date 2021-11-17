@@ -85,63 +85,7 @@ export const TextSetting = (props) => {
 
     return (
         <>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>{props.description}</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder={props.placeholder}
-                            value={tempValue}
-                            onChangeText={text => setTempValue(text)}
-                            placeholderTextColor={colors.text2}
-
-                            underlineColorAndroid={colors.text}
-                        />
-                        <View style={styles.actionsContainer}>
-                            <View style={styles.actions}>
-                                <Pressable
-                                    onPress={() => {
-                                        setTempValue(value)
-                                        setModalVisible(!modalVisible);
-                                    }}
-                                    style={styles.openButton}
-                                >
-                                    <Text style={styles.openButton}>
-                                        Abbrechen
-                                    </Text>
-                                </Pressable>
-                                <Pressable
-                                    style={styles.openButton}
-                                    onPress={() => {
-                                        setModalVisible(!modalVisible);
-                                        if (props.onSubmit) {
-                                            props.onSubmit(value)
-                                        } else {
-                                            if (tempValue != "") {
-                                                AsyncStorage.setItem(props.setting_name, tempValue)
-                                            } else {
-                                                AsyncStorage.removeItem(props.setting_name)
-                                            }
-
-                                            setValue(tempValue)
-                                        }
-
-                                    }}
-                                >
-                                    <Text style={styles.openButton}>
-                                        Speichern
-                                    </Text>
-                                </Pressable>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
+          {/* kk */}
             <Pressable
                 android_ripple={{ color: colors.text2 }}
                 style={styles.container}
