@@ -12,6 +12,18 @@ export const lightGreenColors = {
     link: '##19339e'
 };
 
+export const whitePinkColors = {
+    background: '#fff',
+    background2: "#F8F8F8",
+    background3: "#1E3163",
+    primary: '#f359b5',
+    secondary: '#6f83dc',
+    text: '#000',
+    text2: '#353535',
+    error: '#D32F2F',
+    link: '#19339e'
+};
+
 export const darkColors = {
     background: '#0d0d0d',
     background2: '#121212',

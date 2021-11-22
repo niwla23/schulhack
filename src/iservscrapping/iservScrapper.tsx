@@ -6,7 +6,7 @@ const cheerio = require('react-native-cheerio');
 
 import { untisPlanParser } from './parseUntisPlan'
 import { parseTaskDetails, parseTasksOverview } from './parseTasks'
-import login from './login'
+import { get_remember_token } from './auth'
 import { Task } from './types';
 
 export type ParserResult = {
@@ -16,32 +16,26 @@ export type ParserResult = {
 }
 
 export class IservScrapper {
-  url: String
-  user: String
-  password: String
-  cookies: String | null
+  url: string
+  remembertoken: string | null
 
-  constructor(url: String, user: String, password: String) {
+  constructor(url: string, remembertoken: string) {
     this.url = url;
-    this.user = user;
-    this.password = password;
-    this.cookies = null;
+    this.remembertoken = remembertoken;
   }
 
-  async login() {
+  public static async login(url: string, user: string, password: string): Promise<string> {
     try {
-      this.cookies = await login(this.url, this.user, this.password)
-      return this.cookies
+      return await get_remember_token(url, user, password)
     } catch (e) {
       throw e
     }
-
   }
 
   getHeaders() {
     return {
-      Cookie: this.cookies,
-      'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0',
+      'Cookie': `REMEMBERME=${this.remembertoken}`,
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0',
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   }

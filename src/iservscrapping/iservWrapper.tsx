@@ -1,13 +1,14 @@
 import { IservScrapper } from "./iservScrapper"
 import * as Keychain from 'react-native-keychain';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart';
 import dayjs from "dayjs"
 import relativeTIme from "dayjs/plugin/relativeTime"
-import { relativeTime } from "dayjs/locale/*";
 import { Task } from "./types";
 import RNFetchBlob from "rn-fetch-blob"
 var _ = require('lodash');
 require('dayjs/locale/de')
+
 
 
 
@@ -22,71 +23,56 @@ export class IservWrapper {
 
     async init() {
         try {
-            const server: String = await AsyncStorage.getItem("@server")
-            const credentials = await Keychain.getGenericPassword()
-            const user: String = credentials.username
-            const password: String = credentials.password
-            this.iserv = new IservScrapper(server, user, password)
-        } catch {
-            throw new Error("Login Error")
+            const server: string | null = await AsyncStorage.getItem("@server")
+            if (server) {
+                const credentials = await Keychain.getGenericPassword()
+                if (credentials) {
+                    const remembertoken: string = credentials.password
+                    this.iserv = new IservScrapper(server, remembertoken)
+                } else {
+                    throw new Error("Login Error: Credentials not found")
+                }
+            } else {
+                throw new Error("Login Error: Server URL not found")
+            }
+        } catch (e) {
+            throw e
         }
-
     }
 
-    async forceLogin() {
-        return await this.iserv?.login()
+    public static async login(server: string, username: string, password: string) {
+        let remembertoken = await IservScrapper.login(server, username, password)
+        await Keychain.setGenericPassword(username, remembertoken)
+        return new IservWrapper()
     }
 
-    async loadCookieOrLogin() {
+    async logout_if_expired() {
         const expires_raw = await AsyncStorage.getItem("@cookie_expires")
-        var expires
+        let expires
         if (expires_raw) {
             expires = new Date(expires_raw)
         } else {
             expires = new Date(0)
         }
-
         if (expires < new Date) {
-            const cookies = await this.forceLogin()
-            var expiresDate = new Date()
-            expiresDate.setMinutes(expiresDate.getMinutes() + 15)
-            AsyncStorage.setItem("@cookie_expires", expiresDate.toISOString())
-            if (cookies) {
-                AsyncStorage.setItem("@cookie", cookies.toString())
-            } else {
-                throw new Error("login failed")
-            }
-
+            AsyncStorage.clear();
+            RNRestart.Restart();
         } else {
-            if (this.iserv) {
-                this.iserv.cookies = await AsyncStorage.getItem("@cookie")
-            } else {
-                throw new Error("not initialized")
-            }
-
+            return
         }
 
     }
 
     async downloadFile(path: string, title: string) {
-        await this.loadCookieOrLogin()
+        await this.logout_if_expired()
         const fileUrl = this.iserv?.url + path;
         const headers = this.iserv?.getHeaders();
-        const config = {
-            downloadTitle: title,
-            downloadDescription:
-                "Heruntergeladen von SchulHack",
-            saveAsName: title,
-            allowedInRoaming: true,
-            allowedInMetered: true,
-            showInDownloads: true,
-        };
         let dirs = RNFetchBlob.fs.dirs
         RNFetchBlob
             .config({
                 path: dirs.DownloadDir + '/' + title,
                 addAndroidDownloads: {
-                    useDownloadManager : true,
+                    useDownloadManager: true,
                     notification: true,
                     description: "Datei heruntergeladen von SchulHack"
                 }
@@ -95,26 +81,15 @@ export class IservWrapper {
     }
 
     async getSubstitutionPlan(isNextDay) {
+        this.logout_if_expired()
         const dayToPath = {
-            false: "/iserv/plan/show/raw/01-Vertreter Schüler heute/subst_001.htm",
-            true: "/iserv/plan/show/raw/02-Vertreter Schüler morgen/subst_002.htm"
+            false: "/iserv/plan/show/raw/01-Vertreter Schüler heute/subst_001.htm" || await AsyncStorage.getItem("@currentPlanPath"),
+            true: "/iserv/plan/show/raw/02-Vertreter Schüler morgen/subst_002.htm" || await AsyncStorage.getItem("@nextPlanPath")
         }
         var courses_raw = await AsyncStorage.getItem("@courses") || '[]'
-        const currentPlanPath = await AsyncStorage.getItem("@currentPlanPath")
-        const nextPlanPath = await AsyncStorage.getItem("@nextPlanPath")
-        if (!courses_raw) {
-            throw new Error("unexpected error")
-        }
-        if (nextPlanPath) {
-            dayToPath[true] = nextPlanPath
-        }
-        if (currentPlanPath) {
-            dayToPath[false] = currentPlanPath
-        }
+
         const courses: Array<String> = JSON.parse(courses_raw)
         if (this.iserv) {
-            // await this.iserv.login()
-            await this.loadCookieOrLogin()
             var raw = await this.iserv.get_substitution_plan(dayToPath[isNextDay], courses)
             const plan = raw.plan
             var result = []
@@ -137,7 +112,7 @@ export class IservWrapper {
 
     async getTasksOverview(all?: Boolean) {
         // await this.iserv?.login()
-        await this.loadCookieOrLogin()
+        await this.logout_if_expired()
         const raw = await this.iserv?.getTasksOverview(all)
 
         var result = [
@@ -202,7 +177,7 @@ export class IservWrapper {
             }
         });
 
-        var cleanedResult = []
+        let cleanedResult = []
         result.forEach(function callback(element, index) {
             if (element.data.length !== 0) {
                 cleanedResult.push(element)
@@ -212,17 +187,17 @@ export class IservWrapper {
     }
 
     async getTaskDetails(id: Number): Promise<Task | undefined> {
-        await this.loadCookieOrLogin()
+        await this.logout_if_expired()
         return await this.iserv?.getTaskDetails(id)
     }
 
     async setTaskDoneState(id: Number, state: Boolean): Promise<Boolean | undefined> {
-        await this.loadCookieOrLogin()
+        await this.logout_if_expired()
         return await this.iserv?.setTaskDoneState(id, state)
     }
 
     async getBirthdays() {
-        await this.loadCookieOrLogin()
+        await this.logout_if_expired()
         const raw = await this.iserv?.getBirthdays()
         var formatted = []
         raw?.forEach(element => {

@@ -189,8 +189,6 @@ const AppNavigation: React.FC<Props> = (props) => {
                     if (index === 2) {
 
                         return (
-
-
                             <TouchableOpacity
                                 key={index + "center"}
                                 accessibilityRole="button"
@@ -200,11 +198,9 @@ const AppNavigation: React.FC<Props> = (props) => {
                                 onPress={onPress}
                                 onLongPress={onLongPress}
                                 style={{
-                                    // flex: 1,
                                     backgroundColor: colors.primary,
                                     bottom: 0,
                                     borderRadius: 160,
-                                    // width: 2,
                                     padding: 4,
                                     margin: 10,
                                     marginRight: 25,
@@ -231,7 +227,7 @@ const AppNavigation: React.FC<Props> = (props) => {
                                 onLongPress={onLongPress}
                                 style={{
                                     flex: 1,
-                                    backgroundColor: isFocused ? colors.secondary : (isDark ? colors.background : colors.background2),
+                                    backgroundColor: isFocused ? colors.secondary : (colors.background),
                                     borderRadius: 16,
                                     margin: 5,
                                 }}

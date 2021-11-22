@@ -1,16 +1,17 @@
 "use strict"
 
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ViewStyle, ImageStyle, TextStyle, ToastAndroid, Image, Pressable } from 'react-native';
+import { Text, View, StyleSheet, ViewStyle, ImageStyle, TextStyle, ToastAndroid, Image, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '../components/button'
 import { useTheme } from '../theme/themeprovider';
-import * as Keychain from 'react-native-keychain';
 import CheckBox from '@react-native-community/checkbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { IservWrapper } from '../iservscrapping/iservWrapper'
+import * as Keychain from 'react-native-keychain';
 
 
-function makeUrl(url) {
+function makeUrl(url: string) {
     if (!url) {
         return ""
     }
@@ -31,9 +32,9 @@ export default function LoginScreen({ navigation, route }) {
     const { colors, isDark } = useTheme();
 
     const [email, setEmail] = useState("")
-    const [server, setServer] = useState(null)
-    const [user, setUser] = useState(null)
-    const [password, setPassword] = useState(null)
+    const [server, setServer] = useState("")
+    const [user, setUser] = useState("")
+    const [password, setPassword] = useState("")
     const [accepted, setAccepted] = useState(false)
 
     useEffect(() => {
@@ -167,26 +168,24 @@ export default function LoginScreen({ navigation, route }) {
                             try {
                                 await AsyncStorage.setItem("@server", makeUrl(server))
                                 await AsyncStorage.setItem("@intro_shown", "true")
-                                await AsyncStorage.removeItem("@cookie")
-                                await AsyncStorage.removeItem("@cookie_expires")
-                                await Keychain.setGenericPassword(user, password)
 
-                            } catch {
-                                ToastAndroid.show("Anmeldung fehlgeschlagen", ToastAndroid.LONG)
+                                let expire_date = new Date()
+                                expire_date.setFullYear(expire_date.getFullYear()+1)
+                                await AsyncStorage.setItem("@cookie_expires", expire_date.toISOString())
+                                let iserv = await IservWrapper.login(server, user, password)
+
+                            } catch(e) {
+                                ToastAndroid.show(`Anmeldung fehlgeschlagen ${e}`, ToastAndroid.LONG)
                             }
 
                             setEmail("")
-                            setPassword(null)
-                            setUser(null)
+                            setPassword("")
+                            setUser("")
 
                             route.params.setIsLoggedIn(true)
                         } else {
                             ToastAndroid.show("Bitte fülle alle Felder aus", ToastAndroid.LONG)
                         }
-
-
-
-
                     }}
                 />
             </View>

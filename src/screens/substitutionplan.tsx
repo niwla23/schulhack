@@ -26,29 +26,27 @@ export default function SubstitutionScreen({ navigation }) {
             return !previousState
         })
     };
-    const refresh = () => {
-        load_plan(isNextDay)
+    const refresh = async () => {
+        await load_plan(isNextDay)
     }
     const [data, setData] = useState([])
 
-    const load_plan = (isNextDay: Boolean) => {
+    const load_plan = async (isNextDay: Boolean) => {
         setData([])
         setLoaded(false)
         setError(null)
-        const iserv = new IservWrapper
-        iserv.init().then(() => {
-            iserv.getSubstitutionPlan(isNextDay).then(plan => {
-                setData(plan)
-                setLoaded(true)
-            }).catch(e => {
-                setError(e.toString())
-                setLoaded(true)
-            })
-        })
-            .catch(e => {
-                setError(e.toString())
-                setLoaded(true)
-            })
+
+        try {
+            const iserv = new IservWrapper()
+            await iserv.init()
+            let plan = await iserv.getSubstitutionPlan(isNextDay)
+            setData(plan)
+        } catch(e) {
+            setError(e.toString())
+        } finally {
+            setLoaded(true)
+        }
+
 
     }
 
@@ -179,7 +177,6 @@ export default function SubstitutionScreen({ navigation }) {
                     } else if (!loaded) {
                         return <></>
                     } else {
-                        // return ListError({ error: "Keine Einträge für deine Klassen. Du kannst deine Klassen in den Einstellungen ändern", icon: "search" })
                         return (
                             <>
 
@@ -190,9 +187,6 @@ export default function SubstitutionScreen({ navigation }) {
 
                                     />
                                     <View style={{ marginBottom: 16 }}></View>
-                                    {/* <Pressable onPress={() => navigation.navigate("Settings")}>
-                                        <Text >EINSTELLUNGEN</Text>
-                                    </Pressable> */}
                                     <Button text="EINSTELLUNGEN" onPress={() => navigation.navigate("Settings")}></Button>
                                 </View>
 

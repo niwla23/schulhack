@@ -43,7 +43,7 @@ export default function SettingsScreen({ navigation }) {
                 <TagsSetting
                     title="Klassen / Kurse"
                     setting_name="@courses"
-                    description="Die Klassen für die der Vertretungsplan angzeigt werden soll. Gib Klassen entweder mit Leerzeichen oder Komma getrennt ein. Tippe auf eine Klasse um sie zu entfernen"
+                    description="Die Klassen für die der Vertretungsplan angzeigt werden soll. Gib mehrere Klassen mit Leerzeichen getrennt an. Tippe auf eine Klasse um sie zu entfernen"
                     placeholder="9f 5d"
                 />
                 <SelectSetting
@@ -55,7 +55,8 @@ export default function SettingsScreen({ navigation }) {
                             "darkOrange": "Dunkel (Orange)",
                             "darkPink": "Dunkel (Pink)",
                             "darkGreen": "Dunkel (Grün)",
-                            "light": "Hell (Grün)"
+                            "light": "Hell (Grün)",
+                            "whitePink": "Hell (Pink)"
                         }
                     }
                 />

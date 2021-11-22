@@ -271,7 +271,7 @@ export default function TimetableScreen({ navigation }) {
         navigation.setOptions({
             headerRight: () => (
                 <View style={styles.appBarRight}>
-                    <Pressable onPress={() => { console.log(weekView); setWeekView(!weekView); console.log(weekView) }}>
+                    <Pressable onPress={() => { setWeekView(!weekView) }}>
                         <FontAwesome5 style={styles.appBarIcon} name={weekView ? "calendar-day" : "calendar-week"}></FontAwesome5>
                     </Pressable>
                     <Pressable onPress={exportTimetable}><FontAwesome5 style={styles.appBarIcon} name={"download"}></FontAwesome5></Pressable>
@@ -351,7 +351,7 @@ export default function TimetableScreen({ navigation }) {
     return (
 
         <View style={styles.background}>
-            <TextInputModal open={importModalOpen} onSubmit={importTimetable} onCancel={() => {setimportModalOpen(false)}} description="hi" placeholder="test" />
+            <TextInputModal open={importModalOpen} onSubmit={importTimetable} onCancel={() => { setimportModalOpen(false) }} description="hi" placeholder="test" />
             {timetableExists && tableContent}
             {!timetableExists &&
 

@@ -11,22 +11,24 @@ import getSimpleVersionCode from './helpers/getSimpleVersionCode'
 
 const App = () => {
 
-  const [theme, setTheme] = useState("dark")
+  const [theme, setTheme] = useState("")
   const [showUpdateOverlay, setShowUpdateOverlay] = useState(false)
   const [releaseNotes, setReleaseNotes] = useState(["lol"])
   const [newVersionName, setNewVersionName] = useState("")
   const [updateUrl, setUpdateUrl] = useState("")
 
   useEffect(() => {
+    console.log("oh my god")
     AsyncStorage.getItem("@theme").then(read_value => {
       if (read_value) {
         setTheme(read_value)
+      } else {
+        setTheme("dark")
       }
     })
 
 
     if (Boolean(process.env["ENABLE_AUTO_UPDATE"])) {
-      console.log("checking for updates")
       const currentVersionCode = Number(DeviceInfo.getBuildNumber())
       const abi = DeviceInfo.supportedAbisSync()[0]
       axios.get(`${process.env["UPDATE_SERVER_BASE_URL"]}/versions.json?cb=${new Date().getTime()}`).then(r => {
@@ -58,32 +60,36 @@ const App = () => {
         })
       })
     }
-
+    console.log("fuck yo")
+    console.log(theme)
   }, []);
 
   const acceptUpdate = () => {
-    Alert.alert("Browser schließen", "Bitte schließe den Browser, bevor du das update runterlädst",[
-      {"text": "Hab ich gemacht", onPress: () => {Linking.openURL(updateUrl)}}
+    Alert.alert("Browser schließen", "Bitte schließe den Browser, bevor du das update runterlädst", [
+      { "text": "Hab ich gemacht", onPress: () => { Linking.openURL(updateUrl) } }
     ])
-    
+
   }
 
 
 
   return (
     <AppearanceProvider>
-      <ThemeProvider theme={theme}>
-        <Navigation />
-        {showUpdateOverlay &&
-          <UpdateOverlay
-            releaseNotes={releaseNotes}
-            versionName={newVersionName}
-            onAccept={acceptUpdate}
-            onCancel={() => { setShowUpdateOverlay(false) }}
-          />
-        }
+      {theme != "" &&
+        <ThemeProvider theme={theme}>
+          <Navigation />
+          {showUpdateOverlay &&
+            <UpdateOverlay
+              releaseNotes={releaseNotes}
+              versionName={newVersionName}
+              onAccept={acceptUpdate}
+              onCancel={() => { setShowUpdateOverlay(false) }}
+            />
+          }
 
-      </ThemeProvider>
+        </ThemeProvider>
+      }
+
     </AppearanceProvider>
 
   );

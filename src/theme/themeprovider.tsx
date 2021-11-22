@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
-import { lightGreenColors, darkOrangeColors, darkPinkColors, darkGreenColors } from './colors';
+import { lightGreenColors, whitePinkColors, darkOrangeColors, darkPinkColors, darkGreenColors } from './colors';
 
 export const ThemeContext = React.createContext({
     isDark: false,
@@ -12,7 +12,8 @@ export const ThemeContext = React.createContext({
 
 export const ThemeProvider = (props) => {
     var colorScheme = props.theme || "darkGreen";
-    const [isDark, setIsDark] = React.useState(true);
+    console.log(colorScheme)
+    const [isDark, setIsDark] = React.useState(colorScheme.includes("dark"));
     React.useEffect(() => {
         setIsDark(colorScheme.includes("dark"))
     }, [setIsDark])
@@ -26,7 +27,9 @@ export const ThemeProvider = (props) => {
             break
         case "light":
             colors = lightGreenColors
-            // setIsDark(false)
+            break
+        case "whitePink":
+            colors = whitePinkColors
             break
         case "darkPink":
             colors = darkPinkColors
@@ -41,9 +44,9 @@ export const ThemeProvider = (props) => {
     const defaultTheme = {
         isDark,
         colors: colors,
-        setScheme: (scheme) => setIsDark(scheme === "dark"),
+        setScheme: (scheme) => setIsDark(scheme.includes("dark")),
     };
-
+    console.log(isDark)
     return (
         <ThemeContext.Provider value={defaultTheme}>
             <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={isDark ? colors.background : colors.background2}></StatusBar>

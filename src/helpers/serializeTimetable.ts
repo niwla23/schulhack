@@ -4,7 +4,6 @@ import { Lesson } from '../types/timetable';
 export default async (data_to_serialize: Lesson[][]) => {
   data_to_serialize.map(async (day, dayIndex) => {
     day.map(async (lesson, lessonIndex) => {
-      console.log(`timetable.${day}.${lesson}`)
       await AsyncStorage.setItem(`timetable.${dayIndex}.${lessonIndex}`, JSON.stringify(
         {
           "teacher": lesson.teacher,

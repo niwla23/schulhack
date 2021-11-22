@@ -77,7 +77,6 @@ export const TagsSetting = (props) => {
 
     useEffect(() => {
         AsyncStorage.getItem(props.setting_name).then(read_value => {
-            // fuck possible unhandled exceptions
             try {
                 setValue(JSON.parse(read_value) || [])
             } catch {}

@@ -1,7 +1,7 @@
 "use strict"
 
 import React, { useEffect, useState } from 'react';
-import { Button, Text, View, StyleSheet, ViewStyle, SectionList, TextStyle, Alert, RefreshControl } from 'react-native';
+import { Text, View, StyleSheet, ViewStyle, SectionList, TextStyle, Alert, RefreshControl } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import TaskItem from '../components/taskitem';
 import { IservWrapper } from '../iservscrapping';
@@ -69,28 +69,23 @@ export default function TasksScreen({ navigation }) {
     }
   })
 
-  function loadTasks(all?: Boolean) {
+  async function loadTasks(all?: Boolean) {
     setLoaded(false)
     setTasks([])
     setError(null)
-    const iserv = new IservWrapper
-    iserv.init().then(() => {
-      iserv.getTasksOverview(all).then(fetchedTasks => {
-        setTasks(fetchedTasks)
-        setLoaded(true)
-        if (all) { setOldLoaded(true) }
-      })
-        .catch(e => {
-          setLoaded(true)
-          if (all) { setOldLoaded(true) }
-          setError(e.toString())
-        })
 
-    }).catch(e => {
-      setLoaded(true)
-      if (all) { setOldLoaded(true) }
+    try {
+      const iserv = new IservWrapper()
+      await iserv.init()
+      let fetchedTasks = await iserv.getTasksOverview(all)
+      setTasks(fetchedTasks)
+    } catch (e) {
       setError(e.toString())
-    })
+    } finally {
+      setLoaded(true)
+    }
+
+    if (all) { setOldLoaded(true) }
   }
 
   useEffect(() => {
@@ -104,10 +99,10 @@ export default function TasksScreen({ navigation }) {
         contentInset={{ top: 30 }}
         refreshControl={
           <RefreshControl
-              colors={[colors.primary]}
-              progressBackgroundColor={colors.background2}
-              refreshing={!loaded}
-              onRefresh={loadTasks}
+            colors={[colors.primary]}
+            progressBackgroundColor={colors.background2}
+            refreshing={!loaded}
+            onRefresh={loadTasks}
           />}
         sections={tasks}
         style={styles.contentScroll}
