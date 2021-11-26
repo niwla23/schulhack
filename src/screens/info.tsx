@@ -66,14 +66,14 @@ export default function InfoScreen({ navigation }) {
         <ScrollView style={styles.background}>
             <View style={styles.contentContainer}>
                 <Text style={styles.subHeader}>Entwickler</Text>
-                <Text style={styles.text}>Diese App wurde von Alwin Lohrie entwickelt.{"\n"}Der <Link text="Quellcode" url="https://schulhack.tk/source" /> ist öffentlich unter der General Public License zugänglich</Text>
+                <Text style={styles.text}>Diese App wurde von Alwin Lohrie entwickelt.{"\n"}Der <Link text="Quellcode" url="https://github.com/niwla23/schulhack" /> ist öffentlich unter der General Public License zugänglich</Text>
                 <Text style={styles.subHeader}>Haftungsauschluss</Text>
                 <Text style={styles.text}>
                     Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License. Es gelten die Nutzungsbedingungen deiner Schule.
                 </Text>
                 <Text style={styles.subHeader}>Datenschutz</Text>
                 <Text style={styles.text}>Diese App sendet keine Daten an andere Server als den, der in den Einstellungen angegeben wurde und den Update Server.
-                Der Update Server wird auf gitlab.com gehostet. Für weitere Informationen sieh dir die Datenschutzerklärung von GitLab.com an.{"\n"}
+                Der Update Server wird auf gitlab.com gehostet. Neue Versionen werden von github.com heruntergeladen. Für weitere Informationen sieh dir die Datenschutzerklärung von gitlab.com und github.com an.{"\n"}
                 {"\n"}
                 Das Iserv-Passwort wird in einer sicheren, sogenannten Keychain gespeichert.{"\n"}
                 Es werden keine Analyse Tools eingesetzt.{"\n"}</Text>
