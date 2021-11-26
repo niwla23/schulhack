@@ -9,7 +9,8 @@ export const lightGreenColors = {
     text: '#000',
     text2: '#353535',
     error: '#D32F2F',
-    link: '##19339e'
+    link: '#19339e',
+    danger: '#ff0000' 
 };
 
 export const whitePinkColors = {
@@ -21,7 +22,8 @@ export const whitePinkColors = {
     text: '#000',
     text2: '#353535',
     error: '#D32F2F',
-    link: '#19339e'
+    link: '#19339e',
+    danger: '#ff0000' 
 };
 
 export const darkColors = {
@@ -33,7 +35,8 @@ export const darkColors = {
     text: '#FFFFFF',
     text2: '#8A8A8A',
     error: '#EF9A9A',
-    link: '#19929e'
+    link: '#19929e',
+    danger: '#ff0000' 
 };
 
 export const darkOrangeColors = {
@@ -45,7 +48,8 @@ export const darkOrangeColors = {
     text: '#FFFFFF',
     text2: '#8A8A8A',
     error: '#EF9A9A',
-    link: '#19929e'
+    link: '#19929e',
+    danger: '#ff0000' 
 };
 
 export const darkPinkColors = {

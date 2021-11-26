@@ -4,13 +4,33 @@ import React from 'react';
 import { useTheme } from '../theme/themeprovider';
 
 
-const Button = ({onPress, text}) => {
+const Button = ({onPress, text, type}) => {
     const { colors, isDark } = useTheme();
 
     interface Style {
         text: TextStyle;
         background: ViewStyle
     }
+
+    let bgColor;
+    switch (type) {
+        case "primary":
+            bgColor = colors.primary
+            break;
+        
+        case "secondary":
+            bgColor = colors.secondary
+            break;
+        
+        case "danger":
+            bgColor = colors.danger
+            break;
+    
+        default:
+            bgColor = colors.primary
+            break;
+    }
+
     const styles = StyleSheet.create<Style>({
         text: {
             color: colors.background,
@@ -20,10 +40,9 @@ const Button = ({onPress, text}) => {
 
         },
         background: {
-            backgroundColor: colors.primary,
+            backgroundColor: bgColor,
             padding: 8,
             borderRadius: 8,
-        
         }
     });
 

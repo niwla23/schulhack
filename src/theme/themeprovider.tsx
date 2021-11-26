@@ -12,7 +12,6 @@ export const ThemeContext = React.createContext({
 
 export const ThemeProvider = (props) => {
     var colorScheme = props.theme || "darkGreen";
-    console.log(colorScheme)
     const [isDark, setIsDark] = React.useState(colorScheme.includes("dark"));
     React.useEffect(() => {
         setIsDark(colorScheme.includes("dark"))
@@ -46,7 +45,6 @@ export const ThemeProvider = (props) => {
         colors: colors,
         setScheme: (scheme) => setIsDark(scheme.includes("dark")),
     };
-    console.log(isDark)
     return (
         <ThemeContext.Provider value={defaultTheme}>
             <StatusBar barStyle={isDark ? "light-content" : "dark-content"} backgroundColor={isDark ? colors.background : colors.background2}></StatusBar>

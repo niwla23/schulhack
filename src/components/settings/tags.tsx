@@ -3,6 +3,7 @@ import { Text, Pressable, View, TextInput, Modal, StyleSheet, ViewStyle, TextSty
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../theme/themeprovider';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 export const TagsSetting = (props) => {
     const { colors, isDark } = useTheme();
@@ -20,7 +21,6 @@ export const TagsSetting = (props) => {
     }
     const styles = StyleSheet.create<Style>({
         container: {
-            paddingLeft: 70,
             paddingBottom: 10,
             paddingTop: 10,
         },
@@ -148,8 +148,18 @@ export const TagsSetting = (props) => {
                     setModalVisible(true)
                 }}
             >
-                <Text style={styles.title}>{props.title}</Text>
+
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                    <View style={{ width: 70, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                        <View style={{ width: 70, display: "flex", flexDirection: "row", justifyContent: "center" }}>
+                            <FontAwesome5 style={{ color: colors.text, fontSize: 24 }} name={props.icon_name}></FontAwesome5>
+                        </View>
+                    </View>
+                    <View>
+                    <Text style={styles.title}>{props.title}</Text>
                 <Text style={styles.currentValue}>{value.join(", ")}</Text>
+                    </View>
+                </View>
             </Pressable>
         </>
     );

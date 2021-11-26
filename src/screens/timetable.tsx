@@ -2,16 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, Switch, View, StyleSheet, ViewStyle, TextStyle, Button, Share, Pressable } from 'react-native';
+import { Text, View, StyleSheet, ViewStyle, TextStyle, Share, Pressable } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import { FlatList } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import deserializeTimetable from '../helpers/deserializeTimetable';
-import base64 from 'react-native-base64'
 import { TextInputModal } from '../components/textInputModal';
 import serializeTimetable from '../helpers/serializeTimetable';
+import Button from '../components/button'
 
 
 
@@ -133,28 +133,31 @@ export default function TimetableScreen({ navigation }) {
     const [timetable, setTimetable] = useState([]);
     const [currentDay, setCurrentDay] = useState(new Date().getDay() < 5 ? new Date().getDay() : 0)
     const [timetableExists, setTimetableExists] = useState(true)
+    const [weekView, setWeekView] = useState(false)
 
     const createTimetable = async () => {
-        var i = 0
+        let i = 0
         while (i < 5) {
-            var j = 0
-            while (j < 3) {
-                let _ = await AsyncStorage.setItem(`timetable.${i}.${j}`, JSON.stringify(
-                    {
-                        "teacher": null,
-                        "subject": null,
-                        "room": null,
-                        "day": i,
-                        "hour": j
-                    }
-                ))
-                j++
 
-            }
             i++
         }
         await loadTimetable()
         AsyncStorage.setItem("timetable.exists", "true")
+    }
+
+    const addLesson = async () => {
+        await loadTimetable()
+        await AsyncStorage.setItem(`timetable.${currentDay}.${timetable[currentDay].length}`, JSON.stringify(
+            {
+                "teacher": null,
+                "subject": null,
+                "room": null,
+                "day": currentDay,
+                "hour": timetable[currentDay].length
+            }
+
+        ))
+        await loadTimetable()
     }
 
 
@@ -183,6 +186,17 @@ export default function TimetableScreen({ navigation }) {
         // loadTimetable()
         AsyncStorage.getItem("timetable.exists").then(r => {
             setTimetableExists(Boolean(r))
+            if (!timetableExists) {
+                console.log("creating timetable")
+                createTimetable().then(()=>{
+                    loadTimetable()
+                })
+            }
+        })
+        AsyncStorage.getItem("@timetable_view_mode").then(r => {
+            setTimeout(() => { // todo: remove this temporary mess
+                setWeekView(r === "week")
+            }, 200);
         })
     }, []);
 
@@ -197,7 +211,7 @@ export default function TimetableScreen({ navigation }) {
         };
     }, [loadTimetable]);
 
-    const [weekView, setWeekView] = useState(false)
+
 
     interface Style {
         background: ViewStyle;
@@ -274,8 +288,8 @@ export default function TimetableScreen({ navigation }) {
                     <Pressable onPress={() => { setWeekView(!weekView) }}>
                         <FontAwesome5 style={styles.appBarIcon} name={weekView ? "calendar-day" : "calendar-week"}></FontAwesome5>
                     </Pressable>
-                    <Pressable onPress={exportTimetable}><FontAwesome5 style={styles.appBarIcon} name={"download"}></FontAwesome5></Pressable>
-                    <Pressable onPress={() => { setimportModalOpen(true) }}><FontAwesome5 style={styles.appBarIcon} name={"file-import"}></FontAwesome5></Pressable>
+                    <Pressable onPress={exportTimetable}><FontAwesome5 style={styles.appBarIcon} name={"share-alt"}></FontAwesome5></Pressable>
+                    <Pressable onPress={() => { setimportModalOpen(true) }}><FontAwesome5 style={styles.appBarIcon} name={"cloud-download-alt"}></FontAwesome5></Pressable>
                 </View>
             ),
         });
@@ -288,22 +302,14 @@ export default function TimetableScreen({ navigation }) {
     if (weekView) {
         // week view
         let lists: Element[] = []
-        let lessons = ["1/2", "3/4", "5/6"]
-
-        let firstRowContent: Element[] = []
-        firstRowContent.push(<Col size={0.5}></Col>)
-        lessons.forEach((item) => {
-            firstRowContent.push(<Col><Text style={{ color: colors.text, textAlign: "center" }}>{item}</Text></Col>)
-        })
-        let firstRow = (<Row size={0.2}>{firstRowContent}</Row>)
-
-        lists.push(firstRow)
 
         let iterations = [...Array(5).keys()]
         iterations.forEach((element) => {
             lists.push(
                 <Row key={"day" + element.toString()}>
-                    <Col size={0.5} style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}><Text style={{ color: colors.text, textAlign: "center" }}>{weekdays_short[element]}</Text></Col>
+                    <View style={{ display: "flex", flexDirection: "column", justifyContent: "center", width: 32 }}>
+                        <Text style={{ color: colors.text, textAlign: "center" }}>{weekdays_short[element]}</Text>
+                    </View>
                     {timetable[element].map((item, index: number) =>
                         <Col key={"day" + element.toString() + "lesson" + index.toString()}>
                             {/* <Text style={{}}>{item.subject}</Text> */}
@@ -343,7 +349,9 @@ export default function TimetableScreen({ navigation }) {
                     data={timetable[currentDay]}
                     keyExtractor={item => String(item.day) + String(item.hour)}
                     renderItem={({ item }) => { return (<TimetableItem isWeekView={false} key={String(Math.random())} item={item}></TimetableItem>) }}
+                    ListFooterComponent={<Button text="Stunde hinzufügen" onPress={addLesson} />}
                 />
+
             </>
         )
     }
@@ -353,20 +361,6 @@ export default function TimetableScreen({ navigation }) {
         <View style={styles.background}>
             <TextInputModal open={importModalOpen} onSubmit={importTimetable} onCancel={() => { setimportModalOpen(false) }} description="hi" placeholder="test" />
             {timetableExists && tableContent}
-            {!timetableExists &&
-
-                <View style={styles.noPlanContainer}>
-                    <Text style={styles.noPlanText}>Du hast bisher keinen Stundenplan erstellt. Nachdem du deinen Stundenplan erstellt hast, kannst du ihn bearbeiten.</Text>
-                    <Button
-                        title="Stundenplan erstellen"
-                        color={colors.primary}
-                        onPress={() => {
-                            createTimetable()
-                            setTimetableExists(true)
-                        }} />
-                </View>
-
-            }
 
         </View>
     );

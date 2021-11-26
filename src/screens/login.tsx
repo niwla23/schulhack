@@ -32,6 +32,7 @@ export default function LoginScreen({ navigation, route }) {
     const { colors, isDark } = useTheme();
 
     const [email, setEmail] = useState("")
+    const [courses, setCourses] = useState("")
     const [server, setServer] = useState("")
     const [user, setUser] = useState("")
     const [password, setPassword] = useState("")
@@ -140,6 +141,19 @@ export default function LoginScreen({ navigation, route }) {
                 />
                 <TextInput
                     placeholderTextColor={colors.text2}
+                    autoCapitalize={"none"}
+                    autoCompleteType={'off'}
+                    autoCorrect={false}
+                    keyboardType={'default'}
+                    style={styles.input}
+                    placeholder="Klasse(n) mit Leerzeichen getrennt"
+                    value={courses}
+                    onChangeText={(value) => {
+                        setCourses(value)
+                    }}
+                />
+                <TextInput
+                    placeholderTextColor={colors.text2}
                     style={styles.input}
                     placeholder="Iserv Passwort"
                     autoCompleteType="password"
@@ -170,19 +184,21 @@ export default function LoginScreen({ navigation, route }) {
                                 await AsyncStorage.setItem("@intro_shown", "true")
 
                                 let expire_date = new Date()
-                                expire_date.setFullYear(expire_date.getFullYear()+1)
+                                expire_date.setFullYear(expire_date.getFullYear() + 1)
                                 await AsyncStorage.setItem("@cookie_expires", expire_date.toISOString())
+                                await AsyncStorage.setItem("@courses", JSON.stringify(courses.split(" ")))
                                 let iserv = await IservWrapper.login(server, user, password)
+                                setEmail("")
+                                setPassword("")
+                                setUser("")
 
-                            } catch(e) {
+                                route.params.setIsLoggedIn(true)
+
+                            } catch (e) {
                                 ToastAndroid.show(`Anmeldung fehlgeschlagen ${e}`, ToastAndroid.LONG)
                             }
 
-                            setEmail("")
-                            setPassword("")
-                            setUser("")
 
-                            route.params.setIsLoggedIn(true)
                         } else {
                             ToastAndroid.show("Bitte fülle alle Felder aus", ToastAndroid.LONG)
                         }

@@ -1,7 +1,9 @@
 'use strict';
-import { Text, Pressable, TextStyle, ViewStyle, StyleSheet } from 'react-native';
+import { Text, Pressable, TextStyle, ViewStyle, StyleSheet, View } from 'react-native';
 import React from 'react';
 import { useTheme } from '../../theme/themeprovider';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
 
 export const LinkSetting = (props) => {
     const { colors, isDark } = useTheme();
@@ -12,7 +14,6 @@ export const LinkSetting = (props) => {
     }
     const styles = StyleSheet.create<Style>({
         container: {
-            paddingLeft: 70,
             paddingBottom: 10,
             paddingTop: 10,
         },
@@ -34,8 +35,17 @@ export const LinkSetting = (props) => {
                     props.onPress()
                 }}
             >
-                <Text style={styles.title}>{props.title}</Text>
-                <Text style={styles.currentValue}>{props.value}</Text>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                    <View style={{ width: 70, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                        <View style={{ width: 70, display: "flex", flexDirection: "row", justifyContent: "center" }}>
+                            <FontAwesome5 style={{ color: colors.text, fontSize: 24 }} name={props.icon_name}></FontAwesome5>
+                        </View>
+                    </View>
+                    <View>
+                        <Text style={styles.title}>{props.title}</Text>
+                        <Text style={styles.currentValue}>{props.value}</Text>
+                    </View>
+                </View>
             </Pressable>
         </>
     );

@@ -18,7 +18,6 @@ const App = () => {
   const [updateUrl, setUpdateUrl] = useState("")
 
   useEffect(() => {
-    console.log("oh my god")
     AsyncStorage.getItem("@theme").then(read_value => {
       if (read_value) {
         setTheme(read_value)
@@ -60,8 +59,6 @@ const App = () => {
         })
       })
     }
-    console.log("fuck yo")
-    console.log(theme)
   }, []);
 
   const acceptUpdate = () => {

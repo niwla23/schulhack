@@ -7,10 +7,12 @@ export default async () => {
   while (i < 5) {
       let d: Lesson[] = timetable[timetable.push([]) - 1]
       var j = 0
-      while (j < 3) {
+      while (j < 700) {
           let raw: string | null = await AsyncStorage.getItem(`timetable.${i}.${j}`)
           if (raw) {
               d.push(JSON.parse(raw))
+          } else {
+              break
           }
           j++
       }

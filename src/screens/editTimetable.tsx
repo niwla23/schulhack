@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, Switch, View, StyleSheet, ViewStyle, TextStyle, SectionList, Button, Touchable, Pressable } from 'react-native';
+import { View, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import { TextInput } from 'react-native';
-
+import Button from '../components/button'
 
 
 export default function EditTimetableScreen({ navigation, route }) {
@@ -67,8 +67,8 @@ export default function EditTimetableScreen({ navigation, route }) {
                 }}
             />
             <Button
-                color={colors.primary}
-                title="Speichern"
+                text="Speichern"
+                type="primary"
                 onPress={() => {
                     AsyncStorage.setItem(`timetable.${route.params.day}.${route.params.hour}`, JSON.stringify({
                         subject: subject,
@@ -77,6 +77,15 @@ export default function EditTimetableScreen({ navigation, route }) {
                         day: route.params.day,
                         hour: route.params.hour
                     }))
+                    navigation.goBack()
+                }}
+            />
+            <View style={{ height: 8 }}></View>
+            <Button
+                text="Löschen"
+                type="danger"
+                onPress={() => {
+                    AsyncStorage.removeItem(`timetable.${route.params.day}.${route.params.hour}`)
                     navigation.goBack()
                 }}
             />
