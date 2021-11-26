@@ -1,7 +1,7 @@
 "use strict"
 
 import React, { useState, useEffect } from 'react';
-import { Text, Switch, View, StyleSheet, ViewStyle, TextStyle, SectionList, RefreshControl, Pressable } from 'react-native';
+import { Text, Switch, View, StyleSheet, ViewStyle, TextStyle, SectionList, RefreshControl } from 'react-native';
 import { useTheme } from '../theme/themeprovider';
 import { PlanItem } from '../components/planitem';
 import { ListError } from '../components/listError'
@@ -146,7 +146,7 @@ export default function SubstitutionScreen({ navigation }) {
         <View style={styles.background}>
 
             <SectionList
-                sections={data.plan}
+                sections={data.plan || []}
                 refreshControl={
                     <RefreshControl
                         colors={[colors.primary]}

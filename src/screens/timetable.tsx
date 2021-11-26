@@ -138,7 +138,6 @@ export default function TimetableScreen({ navigation }) {
     const createTimetable = async () => {
         let i = 0
         while (i < 5) {
-
             i++
         }
         await loadTimetable()
