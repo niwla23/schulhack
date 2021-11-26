@@ -31,7 +31,7 @@
         "axios": "^0.21.1",
         "babel-plugin-transform-inline-environment-variables": "^0.4.3",
         "dayjs": "^1.10.4",
-        "lodash": "^4.17.20",
+        "lodash": "^4.17.21",
         "react": "16.13.1",
         "react-native": "0.63.4",
         "react-native-appearance": "^0.3.4",
