@@ -3,22 +3,21 @@
 import {Text, StyleSheet, View, ViewStyle, TextStyle} from 'react-native';
 import React from 'react';
 import {useTheme} from '../theme/themeprovider';
-import {Birthday} from '../iservscrapping/types';
+import {Classtest} from '../iservscrapping/types';
+import {Tag} from './tag';
 
-export const BirthdayItem = (props: {data: Birthday}) => {
+export const ClasstestItem = (props: {data: Classtest}) => {
   const {colors, isDark} = useTheme();
 
   interface Style {
     itemContainer: ViewStyle;
     itemTitle: TextStyle;
-    itemContent: TextStyle;
+    tags: ViewStyle;
   }
-
-  let highlight = props.data.when === 'heute';
 
   const styles = StyleSheet.create<Style>({
     itemContainer: {
-      backgroundColor: highlight ? colors.primary : colors.background2,
+      backgroundColor: colors.background2,
       padding: 20,
       borderRadius: 8,
       margin: 10,
@@ -26,24 +25,25 @@ export const BirthdayItem = (props: {data: Birthday}) => {
     },
     itemTitle: {
       fontSize: 20,
-      fontWeight: '600',
       color: colors.text,
+      marginBottom: 8,
     },
-    itemContent: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: colors.text,
+    tags: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
     },
   });
 
   return (
     <View style={styles.itemContainer}>
-      <Text style={styles.itemTitle}>{props.data.name}</Text>
-      <Text style={styles.itemContent}>
-        wird {props.data.when} {props.data.becomes}
-      </Text>
+      <Text style={styles.itemTitle}>{props.data.title}</Text>
+      <View style={styles.tags}>
+        <Tag header={'Datum'} content={props.data.date} />
+        <Tag header={'Art'} content={props.data.kind} />
+      </View>
     </View>
   );
 };
 
-export default BirthdayItem;
+export default ClasstestItem;

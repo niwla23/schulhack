@@ -1,19 +1,27 @@
-"use strict"
+'use strict';
 
-import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ViewStyle, SectionList, TextStyle, Alert, RefreshControl } from 'react-native';
-import { useTheme } from '../theme/themeprovider';
+import React, {useEffect, useState} from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+  RefreshControl,
+  Switch,
+  FlatList,
+} from 'react-native';
+import {useTheme} from '../theme/themeprovider';
 import TaskItem from '../components/taskitem';
-import { IservWrapper } from '../iservscrapping';
+import {IservWrapper} from '../iservscrapping';
 import ListError from '../components/listError';
 
-
-export default function TasksScreen({ navigation }) {
-  const { colors, isDark } = useTheme();
-  const [tasks, setTasks] = useState([])
-  const [loaded, setLoaded] = useState(false)
-  const [oldLoaded, setOldLoaded] = useState(false)
-  const [error, setError] = useState(null)
+export default function TasksScreen({navigation}) {
+  const {colors, isDark} = useTheme();
+  const [tasks, setTasks] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [oldLoaded, setOldLoaded] = useState(false);
+  const [error, setError] = useState(null);
 
   interface Style {
     background: ViewStyle;
@@ -22,6 +30,8 @@ export default function TasksScreen({ navigation }) {
     sectionHeaderBadge: TextStyle;
     contentScroll: ViewStyle;
     loadMoreText: TextStyle;
+    daySwitchContainer: ViewStyle;
+    defaultText: TextStyle;
   }
   const styles = StyleSheet.create<Style>({
     background: {
@@ -31,18 +41,17 @@ export default function TasksScreen({ navigation }) {
       // justifyContent: 'center'
     },
     sectionHeaderContainer: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
 
       marginTop: 16,
       marginLeft: 16,
-      marginRight: 16
+      marginRight: 16,
     },
     sectionHeader: {
       color: colors.text,
       fontSize: 23,
-
     },
     sectionHeaderBadge: {
       color: colors.text,
@@ -53,85 +62,110 @@ export default function TasksScreen({ navigation }) {
       borderRadius: 30 / 2,
       fontSize: 16,
 
-      textAlign: "center"
+      textAlign: 'center',
     },
     contentScroll: {
       padding: 8,
-      height: "100%"
+      height: '100%',
     },
     loadMoreText: {
       color: colors.text,
       paddingBottom: 32,
       paddingTop: 8,
-      textAlign: "center",
-      textDecorationLine: "underline"
+      textAlign: 'center',
+      textDecorationLine: 'underline',
+    },
+    daySwitchContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 8,
+    },
+    defaultText: {
+      color: colors.text,
+    },
+  });
 
-    }
-  })
+  React.useLayoutEffect(() => {
+    const toggleSwitch = () => setOldLoaded((previousState) => !previousState);
+
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={styles.daySwitchContainer}>
+          <Text style={styles.defaultText}>Aktuell</Text>
+          <Switch
+            trackColor={{false: '#767577', true: colors.secondary}}
+            thumbColor={colors.primary}
+            onValueChange={toggleSwitch}
+            value={oldLoaded}
+          />
+          <Text style={styles.defaultText}>Alte</Text>
+        </View>
+      ),
+    });
+  }, [navigation, styles, colors.secondary, colors.primary, oldLoaded]);
 
   async function loadTasks(all?: Boolean) {
-    setLoaded(false)
-    setTasks([])
-    setError(null)
+    console.log('loading', all);
+    setLoaded(false);
+    setTasks([]);
+    setError(null);
 
     try {
-      const iserv = new IservWrapper()
-      await iserv.init()
-      let fetchedTasks = await iserv.getTasksOverview(all)
-      setTasks(fetchedTasks)
+      const iserv = new IservWrapper();
+      await iserv.init();
+      let fetchedTasks = await iserv.getTasksOverview(all);
+      setTasks(fetchedTasks);
     } catch (e) {
-      setError(e.toString())
+      setError(e.toString());
     } finally {
-      setLoaded(true)
+      setLoaded(true);
     }
-
-    if (all) { setOldLoaded(true) }
   }
 
   useEffect(() => {
-    loadTasks()
-
-  }, []);
+    loadTasks(oldLoaded);
+  }, [oldLoaded]);
 
   return (
     <View style={styles.background}>
-      <SectionList
-        contentInset={{ top: 30 }}
+      <FlatList
+        contentInset={{top: 30}}
         refreshControl={
           <RefreshControl
             colors={[colors.primary]}
             progressBackgroundColor={colors.background2}
             refreshing={!loaded}
-            onRefresh={loadTasks}
-          />}
-        sections={tasks}
+            onRefresh={() => {
+              loadTasks(oldLoaded);
+            }}
+          />
+        }
+        data={tasks}
         style={styles.contentScroll}
-        keyExtractor={(item, index) => item + index}
-        renderItem={({ item }) => <TaskItem content={item} />}
-        renderSectionHeader={({ section: { title, data } }) => (
-          <View style={styles.sectionHeaderContainer}>
-            <Text style={styles.sectionHeader}>{title}</Text>
-            <Text style={styles.sectionHeaderBadge}>{data.length}</Text>
-          </View>
-
-        )}
+        keyExtractor={(item) => item.id}
+        renderItem={({item}) => <TaskItem content={item} />}
         ListFooterComponent={() => (
           <Text
             style={styles.loadMoreText}
-            onPress={() => { loadTasks(true) }}
-          >
-            {loaded && !oldLoaded ? "Ältere laden" : ""}
+            onPress={() => {
+              setOldLoaded(true);
+            }}>
+            {loaded && !oldLoaded ? 'Ältere laden' : ''}
           </Text>
         )}
         ListEmptyComponent={() => {
           if (error) {
-            return ListError({ error: error, icon: "bug" })
+            return ListError({error: error, icon: 'bug'});
           } else if (!loaded) {
-            return ListError({ error: "Wird geladen", icon: "clock" })
+            return ListError({error: 'Wird geladen', icon: 'clock'});
           } else {
-            return ListError({ error: "Du hast in letzter Zeit keine Aufgaben bekommen", icon: "glass-cheers" })
+            return ListError({
+              error: 'Du hast in letzter Zeit keine Aufgaben bekommen',
+              icon: 'glass-cheers',
+            });
           }
-
         }}
       />
     </View>
