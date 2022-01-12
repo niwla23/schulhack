@@ -11,13 +11,13 @@
         "url": "https://gitlab.com/niwla23/schulhack/-/issues"
     },
     "scripts": {
-        "android": "UPDATE_SERVER_BASE_URL=http://192.168.178.82:8000 ENABLE_AUTO_UPDATE=true react-native run-android",
+        "android": "UPDATE_SERVER_BASE_URL=https://api.github.com/repos/niwla23/schulhack/releases ALLOW_PRERELEASES=true ENABLE_AUTO_UPDATE=true react-native run-android",
         "ios": "react-native run-ios",
         "start": "react-native start",
         "test": "jest",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-        "releaseAndroid:standalone": "cd android && UPDATE_SERVER_BASE_URL=https://schulhack.gitlab.io/update-server ENABLE_AUTO_UPDATE=true ./gradlew assembleRelease",
-        "releaseAndroid:testUpdates": "cd android && UPDATE_SERVER_BASE_URL=http://192.168.178.82:8000 ENABLE_AUTO_UPDATE=true ./gradlew assembleRelease",
+        "releaseAndroid:standalone": "cd android && UPDATE_SERVER_BASE_URL=https://api.github.com/repos/niwla23/schulhack/releases ENABLE_AUTO_UPDATE=true ./gradlew assembleRelease",
+        "releaseAndroid:testUpdates": "cd android && UPDATE_SERVER_BASE_URL=https://api.github.com/repos/niwla23/schulhack/releases ENABLE_AUTO_UPDATE=true ./gradlew assembleRelease",
         "releaseAndroid:fdroid": "cd android && ./gradlew assembleRelease",
         "clean": "cd android && ./gradlew clean"
     },
@@ -33,7 +33,7 @@
         "dayjs": "^1.10.4",
         "lodash": "^4.17.21",
         "react": "16.13.1",
-        "react-native": "0.66.3",
+        "react-native": "0.66.4",
         "react-native-appearance": "^0.3.4",
         "react-native-base64": "^0.2.1",
         "react-native-bootsplash": "^3.1.2",

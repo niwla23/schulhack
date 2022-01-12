@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {UpdateOverlay} from './components/updateOverlay';
 import axios from 'axios';
 import {Alert, Linking} from 'react-native';
-import getSimpleVersionCode from './helpers/getSimpleVersionCode';
+import compareVersions from './helpers/compareVersions';
 
 const App = () => {
   const [theme, setTheme] = useState('');
@@ -25,53 +25,54 @@ const App = () => {
       }
     });
 
-    if (process.env.ENABLE_AUTO_UPDATE) {
-      const currentVersionCode = Number(DeviceInfo.getBuildNumber());
-      const abi = DeviceInfo.supportedAbisSync()[0];
-      axios
-        .get(
-          `${
-            process.env.UPDATE_SERVER_BASE_URL
-          }/versions.json?cb=${new Date().getTime()}`,
-        )
-        .then((r) => {
-          const versionData = r.data[abi];
-
-          setShowUpdateOverlay(versionData.versionCode > currentVersionCode);
-          setNewVersionName(versionData.versionName);
-          setUpdateUrl(versionData.url);
-
-          axios
-            .get(
-              `${
-                process.env.UPDATE_SERVER_BASE_URL
-              }/release_notes.json?cb=${new Date().getTime()}`,
-            )
-            .then((b) => {
-              const missedVersions = [];
-              for (
-                var i = currentVersionCode;
-                i <= versionData.versionCode;
-                i++
-              ) {
-                missedVersions.push(i);
-              }
-              if (missedVersions.length > 1) {
-                missedVersions.shift();
-              }
-
-              const localReleaseNotes: Array<string> = [];
-              missedVersions.forEach((element) => {
-                const simpleVersionCode = getSimpleVersionCode(element, abi);
-                b.data[String(simpleVersionCode)].de.forEach((line) => {
-                  localReleaseNotes.push(line);
-                });
-              });
-
-              // setReleaseNotes(b.data[String(versionData.simpleVersionCode)].de)
-              setReleaseNotes(localReleaseNotes);
-            });
+    if (process.env.ENABLE_AUTO_UPDATE && process.env.UPDATE_SERVER_BASE_URL) {
+      const currentVersion: number[] = [];
+      DeviceInfo.getVersion()
+        .split('.')
+        .forEach((element) => {
+          currentVersion.push(Number(element));
         });
+      if (currentVersion.length === 2) {
+        currentVersion.push(0);
+      }
+
+      const abi = DeviceInfo.supportedAbisSync()[0];
+      const url = process.env.UPDATE_SERVER_BASE_URL;
+
+      axios.get(url).then((r) => {
+        let latestRelease: any;
+        r.data.forEach((element: any) => {
+          if (
+            !latestRelease.prerelease ||
+            process.env.ALLOW_PRERELEASES === 'true'
+          ) {
+            latestRelease = element;
+            return;
+          }
+        });
+        let latestVersion: number[] = [];
+        latestRelease.name
+          .slice(1)
+          .split('.')
+          .forEach((element: string) => {
+            latestVersion.push(Number(element));
+          });
+        if (latestVersion.length === 2) {
+          latestVersion.push(0);
+        }
+
+        let updateAvailable = compareVersions(currentVersion, latestVersion);
+        if (updateAvailable) {
+          setReleaseNotes(latestRelease.body.split('\n'));
+
+          latestRelease.assets.forEach((element: any) => {
+            if (element.name.split('_')[2] === abi) {
+              setUpdateUrl('element.browser_download_url');
+            }
+          });
+        }
+        setShowUpdateOverlay(updateAvailable);
+      });
     }
   }, []);
 
