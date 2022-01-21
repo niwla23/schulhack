@@ -13,7 +13,7 @@
     "scripts": {
         "android": "UPDATE_SERVER_BASE_URL=https://api.github.com/repos/niwla23/schulhack/releases ALLOW_PRERELEASES=true ENABLE_AUTO_UPDATE=true react-native run-android",
         "ios": "react-native run-ios",
-        "start": "react-native start",
+        "start": "UPDATE_SERVER_BASE_URL=https://api.github.com/repos/niwla23/schulhack/releases ALLOW_PRERELEASES=true ENABLE_AUTO_UPDATE=true react-native start",
         "test": "jest",
         "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
         "releaseAndroid:standalone": "cd android && UPDATE_SERVER_BASE_URL=https://api.github.com/repos/niwla23/schulhack/releases ENABLE_AUTO_UPDATE=true ./gradlew assembleRelease",

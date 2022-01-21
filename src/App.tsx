@@ -24,7 +24,7 @@ const App = () => {
         setTheme('dark');
       }
     });
-
+    console.log('tee', process.env);
     if (process.env.ENABLE_AUTO_UPDATE && process.env.UPDATE_SERVER_BASE_URL) {
       const currentVersion: number[] = [];
       DeviceInfo.getVersion()
@@ -60,6 +60,9 @@ const App = () => {
         if (latestVersion.length === 2) {
           latestVersion.push(0);
         }
+
+        console.log('current version', currentVersion);
+        console.log('latest release', latestRelease);
 
         let updateAvailable = compareVersions(currentVersion, latestVersion);
         if (updateAvailable) {
