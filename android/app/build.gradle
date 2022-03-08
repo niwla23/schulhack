@@ -191,6 +191,7 @@ android {
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
+                output.outputFileName = "schulhack_v${defaultConfig.versionName}_${abi}_${variant.buildType.name}.apk"
             }
 
         }
