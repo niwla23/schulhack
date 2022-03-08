@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 'use strict';
 
 import React, {useState, useEffect} from 'react';
@@ -188,7 +189,7 @@ export default function TimetableScreen({navigation}) {
     return () => {
       unsubscribe();
     };
-  }, [loadTimetable]);
+  }, [loadTimetable, navigation]);
 
   interface Style {
     background: ViewStyle;
@@ -365,7 +366,11 @@ export default function TimetableScreen({navigation}) {
             );
           }}
           ListFooterComponent={
-            <Button text="Stunde hinzufügen" onPress={addLesson} />
+            <Button
+              type="primary"
+              text="Stunde hinzufügen"
+              onPress={addLesson}
+            />
           }
         />
       </>
@@ -380,8 +385,8 @@ export default function TimetableScreen({navigation}) {
         onCancel={() => {
           setimportModalOpen(false);
         }}
-        description="hi"
-        placeholder="test"
+        description="Hier kannst du einen Stundenplan importieren. Kopiere dazu die zuvor exportierten Daten in das Textfeld"
+        placeholder='[[{"subject":"Physik",...'
       />
       {timetableExists && tableContent}
     </View>
