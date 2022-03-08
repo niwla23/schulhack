@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 'use strict';
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Text,
@@ -135,10 +135,10 @@ export default function TimetableScreen({navigation}) {
     await loadTimetable();
   };
 
-  const loadTimetable = async () => {
+  const loadTimetable = useCallback(async () => {
     const tt = await deserializeTimetable();
     setTimetable(tt);
-  };
+  }, [setTimetable]);
 
   const exportTimetable = async () => {
     const tt = await deserializeTimetable();
@@ -157,36 +157,20 @@ export default function TimetableScreen({navigation}) {
   };
 
   useEffect(() => {
-    // loadTimetable()
-    const createTimetable = async () => {
-      let i = 0;
-      while (i < 5) {
-        i++;
-      }
-      await loadTimetable();
-      AsyncStorage.setItem('timetable.exists', 'true');
-    };
-
-    AsyncStorage.getItem('timetable.exists').then((r) => {
-      setTimetableExists(Boolean(r));
-      if (!timetableExists) {
-        createTimetable().then(() => {
-          loadTimetable();
-        });
-      }
-    });
+    loadTimetable();
     AsyncStorage.getItem('@timetable_view_mode').then((r) => {
       setTimeout(() => {
         // todo: remove this temporary mess
         setWeekView(r === 'week');
       }, 200);
     });
-  }, [timetableExists]);
+  }, [loadTimetable, timetableExists]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', loadTimetable);
 
     return () => {
+      loadTimetable();
       unsubscribe();
     };
   }, [loadTimetable, navigation]);

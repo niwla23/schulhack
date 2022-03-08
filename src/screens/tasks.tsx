@@ -107,7 +107,6 @@ export default function TasksScreen({navigation}) {
   }, [navigation, styles, colors.secondary, colors.primary, oldLoaded]);
 
   async function loadTasks(all?: Boolean) {
-    console.log('loading', all);
     setLoaded(false);
     setTasks([]);
     setError(null);

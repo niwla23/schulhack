@@ -89,9 +89,11 @@ export class IservScrapper {
   }
 
   async getTaskDetails(id: Number): Promise<Task> {
+    console.log(id)
     let response = await this._authenticated_request(
       `/iserv/exercise/show/${id}`,
     );
+    
     return parseTaskDetails(response.data, this.url);
   }
 

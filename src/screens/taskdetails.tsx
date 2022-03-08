@@ -101,8 +101,8 @@ export default function TaskDetailsScreen({navigation, route}) {
     id: 0,
     title: 'Titel',
     from: 'Max Mustermann',
-    start: new Date()(),
-    end: new Date()(),
+    start: new Date(),
+    end: new Date(),
     description: 'Hier ist die Beschreibung\nhallo\nhdsajdhsjd',
     providedFiles: [],
     done: false,
@@ -127,17 +127,20 @@ export default function TaskDetailsScreen({navigation, route}) {
     iserv
       .init()
       .then(() => {
+        console.log(route.params.task);
         iserv
           .getTaskDetails(route.params.task.id)
           .then((fetchedTask) => {
             if (fetchedTask) {
-              fetchedTask.title = route.params.task.original.task;
-              fetchedTask.done = route.params.task.original.done;
-              fetchedTask.feedback = route.params.task.original.feedback;
-              fetchedTask.start = route.params.task.original.start;
-              fetchedTask.end = route.params.task.original.end;
-              fetchedTask.id = route.params.task.original.id;
+              console.log('2');
+              fetchedTask.title = route.params.task.title;
+              fetchedTask.done = route.params.task.done;
+              fetchedTask.feedback = route.params.task.feedback;
+              fetchedTask.start = null;
+              fetchedTask.end = route.params.task.end;
+              fetchedTask.id = route.params.task.id;
               fetchedTask.url = `${iserv.iserv?.url}/iserv/exercise/show/${fetchedTask.id}`;
+              console.log('3');
               setTask(fetchedTask);
               setDoneToggle(task.done);
               setLoaded(true);
@@ -185,11 +188,16 @@ export default function TaskDetailsScreen({navigation, route}) {
               />
               <Tag
                 header="Start"
-                content={task.start.toLocaleString().slice(0, -3)}
+                content={
+                  task.start
+                    ? task.start.toLocaleString().slice(0, -3)
+                    : 'nicht verfügbar'
+                }
               />
               <Tag
                 header="Abgabe"
-                content={task.end.toLocaleString().slice(0, -3)}></Tag>
+                content={task.end.toLocaleString().slice(0, -3)}
+              />
             </Text>
             <View style={styles.openIservButtonContainer}>
               <Button

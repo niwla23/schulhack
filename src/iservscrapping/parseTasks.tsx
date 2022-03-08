@@ -36,18 +36,16 @@ export function parseTasksOverview(input: String) {
     'done', // 4
     'feedback', // 5
   ];
-  console.log(content.children().length);
 
   // Scrapping function start
   content.children().each((index, row) => {
     let parsedRow: Row = {done: false, id: index};
     row = $(row);
-    console.log('row');
     row.children().each(function (index2, column) {
       column = $(column);
-      console.log('columnt');
       if (index2 === 1) {
         parsedRow.title = column.text().trim();
+        parsedRow.id = $(column.children()[0]).attr('href').split('/').pop();
       } else if (index2 === 2) {
         let text: string = column.attr('data-sort');
         const year = Number(text.substring(0, 4));
@@ -56,15 +54,7 @@ export function parseTasksOverview(input: String) {
         const hour = Number(text.substring(8, 10));
         const minutes = Number(text.substring(10, 12));
         const seconds = Number(text.substring(12, 14));
-        console.log(
-          year,
-          month,
-          day,
-          hour,
-          minutes,
-          seconds,
-          new Date(year, month, day, hour, minutes, seconds),
-        );
+
         parsedRow.end = new Date(year, month, day, hour, minutes, seconds);
       } else if (index2 === 3) {
         parsedRow.feedback = column.text().trim();
@@ -72,6 +62,7 @@ export function parseTasksOverview(input: String) {
         parsedRow.tags = column.text().trim();
       }
     });
+    console.log(parsedRow.id);
     parsed.push(parsedRow);
   });
 
@@ -92,7 +83,6 @@ export function parseTaskDetails(input: String, baseUrl: String): Object {
   task.from = $($('.mailto')[0]).text().trim();
   // start and end can be parsed on overview so no need to do this here actually.
   task.description = $($('.text-break-word')[0]).html().trim();
-
   // get task type
   if ($('.file-universal-upload-button').length > 0) {
     task.type = 'upload';
@@ -157,6 +147,5 @@ export function parseTaskDetails(input: String, baseUrl: String): Object {
       task.feedbackText = undefined;
     }
   }
-
   return task;
 }

@@ -51,7 +51,7 @@ const TasksNavigation: React.FC<Props> = (props) => {
     <TaskStack.Navigator headerMode="screen" headerTintColor="#fff">
       <TaskStack.Screen
         name="Tasks"
-        options={{title: 'Aufgaben'}}
+        options={{title: 'Aufgaben - ALPHA'}}
         component={TasksScreen}
       />
       <TaskStack.Screen
