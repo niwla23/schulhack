@@ -21,6 +21,7 @@ import deserializeTimetable from '../helpers/deserializeTimetable';
 import {TextInputModal} from '../components/textInputModal';
 import serializeTimetable from '../helpers/serializeTimetable';
 import Button from '../components/button';
+import smartTimetableDay from '../helpers/smartTimetableDay';
 
 export const TimetableItem = ({item, isWeekView}) => {
   const {colors, isDark} = useTheme();
@@ -115,8 +116,9 @@ export default function TimetableScreen({navigation}) {
 
   const [timetable, setTimetable] = useState([]);
   const [currentDay, setCurrentDay] = useState(
-    new Date().getDay() < 5 ? new Date().getDay() : 0,
+    smartTimetableDay(new Date()) - 1,
   );
+
   const [timetableExists, setTimetableExists] = useState(true);
   const [weekView, setWeekView] = useState(false);
 
