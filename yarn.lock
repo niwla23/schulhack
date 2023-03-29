@@ -6960,10 +6960,10 @@ react-native-codegen@^0.0.7:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
-react-native-device-info@^8.0.7:
-  version "8.4.8"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.4.8.tgz#fc92ae423e47db6cfbf30c30012e09cee63727fa"
-  integrity sha512-92676ZWHZHsPM/EW1ulgb2MuVfjYfMWRTWMbLcrCsipkcMaZ9Traz5mpsnCS7KZpsOksnvUinzDIjsct2XGc6Q==
+react-native-device-info@^10.5.0:
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.5.0.tgz#fb098f3c5fe763af3d0a07a4d92e26102989085c"
+  integrity sha512-o39xwi92aPDc8ZtlN0sX2ZJQGKv1BZqNgZZ9sSFDm25acQj2WD9G8/6KBcoQSqDROl9b2o44hahF4stWMAKtcw==
 
 react-native-easy-grid@^0.2.2:
   version "0.2.2"
